@@ -159,7 +159,7 @@ Game::Initialise()
 	// Do something meanwhile...
 
 	// Release the sound
-	sound.releaseSound(soundSample);
+	//sound.releaseSound(soundSample);
 
 	return (true);
 }

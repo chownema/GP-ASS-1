@@ -1,5 +1,6 @@
 // This include
 #include "SoundSystem.h"
+#include "logmanager.h"
 
 
 
@@ -8,6 +9,7 @@ SoundSystem::SoundSystem()
 	if (FMOD::System_Create(&m_pSystem) != FMOD_OK)
 	{
 		// Report Error
+		LogManager::GetInstance().Log("FMOD Init Fail!");
 		return;
 	}
 
@@ -17,6 +19,7 @@ SoundSystem::SoundSystem()
 	if (driverCount == 0)
 	{
 		// Report Error
+		LogManager::GetInstance().Log("FMOD driver Init Fail!");
 		return;
 	}
 
