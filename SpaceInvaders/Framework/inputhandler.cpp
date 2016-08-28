@@ -55,7 +55,7 @@ InputHandler::ProcessInput(Game& game)
 		else if (e.type == SDL_KEYDOWN)
 		{
 			// W02.3: Tell the game to fire a player bullet...
-
+			// Need to fix movement
 			if (e.key.keysym.sym == SDLK_LEFT) {
 				game.MoveSpaceShipLeft();
 			}

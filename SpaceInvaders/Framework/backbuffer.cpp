@@ -8,6 +8,7 @@
 #include "texturemanager.h"
 #include "sprite.h"
 #include "texture.h"
+#include "animatedsprite.h"
 
 // Library includes:
 #include <SDL.h>
@@ -127,6 +128,25 @@ BackBuffer::DrawSprite(Sprite& sprite)
 }
 
 void
+BackBuffer::DrawAnimatedSprite(AnimatedSprite& sprite)
+{
+	SDL_Rect dest;
+	SDL_Rect source;
+
+	dest.x = sprite.GetX();
+	dest.y = sprite.GetY();
+	dest.w = sprite.GetFrameWidth();
+	dest.h = sprite.GetFrameHeight();
+
+	source.x = (sprite.GetCurrentFrame() * sprite.GetFrameWidth());
+	source.y = 0;
+	source.w = sprite.GetFrameWidth();
+	source.h = sprite.GetFrameHeight();
+
+	SDL_RenderCopy(m_pRenderer, sprite.GetTexture()->GetTexture(), &source, &dest);
+}
+
+void
 BackBuffer::DrawRectangle(int x1, int y1, int x2, int y2)
 {
 	SDL_Rect fillRect;
@@ -159,6 +179,22 @@ BackBuffer::CreateSprite(const char* pcFilename)
 	Texture* pTexture = m_pTextureManager->GetTexture(pcFilename);
 
 	Sprite* pSprite = new Sprite();
+	if (!pSprite->Initialise(*pTexture))
+	{
+		LogManager::GetInstance().Log("Sprite Failed to Create!");
+	}
+
+	return (pSprite);
+}
+
+AnimatedSprite*
+BackBuffer::CreateAnimatedSprite(const char* pcFilename)
+{
+	assert(m_pTextureManager);
+
+	Texture* pTexture = m_pTextureManager->GetTexture(pcFilename);
+
+	AnimatedSprite* pSprite = new AnimatedSprite();
 	if (!pSprite->Initialise(*pTexture))
 	{
 		LogManager::GetInstance().Log("Sprite Failed to Create!");

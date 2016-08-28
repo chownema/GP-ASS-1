@@ -7,11 +7,13 @@ class BackBuffer;
 class InputHandler;
 class Sprite;
 class PlayerShip;
+class explosion;
 class bullet;
 class Enemy;
-#include <vector>
-#include "fmod.hpp"
+class SoundSystem;
 
+#include "SoundSystem.h"
+#include <vector>
 
 class Game
 {
@@ -34,6 +36,8 @@ public:
 
 	void SpawnEnemy(int x, int y);
 	void SpawnExplosion(int x, int y);
+
+
 
 	
 protected:
@@ -72,12 +76,15 @@ protected:
 	std::vector<Enemy*> pEnemyVector;
 	// W02.3: Add a bullet container field.
 	std::vector<bullet*> pBulletVector;
-
+	std::vector<explosion*> pExplosionVector;
+	
+	// Vector Iterators
+	std::vector<explosion*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
 	std::vector<bullet*>::iterator itBullet;
 	// FMOD
-	FMOD::System* fSys = NULL;
-	FMOD_RESULT fResult;
+	SoundSystem sound;
+
 
 private:
 

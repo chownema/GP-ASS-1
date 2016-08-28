@@ -13,7 +13,8 @@
 #include "Enemy.h"
 #include "texture.h"
 #include "math.h"
-#include <fmod.hpp>
+#include "explosion.h"
+#include "SoundSystem.h"
 
 
 // Library includes:
@@ -21,6 +22,7 @@
 #include <SDL.h>
 #include <vector>
 #include <Windows.h>
+#include "fmod.hpp"
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -75,26 +77,29 @@ Game::~Game()
 bool 
 Game::Initialise()
 {
-	// Intit FMOD object
-	FMOD_RESULT System_Create(FMOD::System **system);
-	//System::init(,,);
-	//FSOUND_Init(44100, 32, 0);
-	FMOD_RESULT result;
-	FMOD::System *system = NULL;
+	//// Intit FMOD object
+	//FMOD_RESULT System_Create(FMOD::System **system);
+	////System::init(,,);
+	////FSOUND_Init(44100, 32, 0);
+	//FMOD_RESULT result;
+	//FMOD::System *system = NULL;
 
-	result = FMOD::System_Create(&system);      // Create the main system object.
-	if (result != FMOD_OK)
-	{
-		printf("FMOD error! (%d) %s\n", result, "error 1");
-		exit(-1);
-	}
+	//result = FMOD::System_Create(&system);      // Create the main system object.
+	//if (result != FMOD_OK)
+	//{
+	//	printf("FMOD error! (%d) %s\n", result, "error 1");
+	//	exit(-1);
+	//}
 
-	result = system->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
-	if (result != FMOD_OK)
-	{
-		printf("FMOD error! (%d) %s\n", result, "error ");
-		exit(-1);
-	}
+	//result = system->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
+	//if (result != FMOD_OK)
+	//{
+	//	printf("FMOD error! (%d) %s\n", result, "error ");
+	//	exit(-1);
+	//}
+
+	// Fmod Init
+	
 
 
 
@@ -143,6 +148,18 @@ Game::Initialise()
 	// W02.2: Fill the container with these new enemies.
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
+
+	// Create a sample sound
+	SoundClass soundSample;
+	sound.createSound(&soundSample, "sounds\\drumloop.wav");
+
+	// Play the sound, with loop mode
+	sound.playSound(soundSample, true);
+
+	// Do something meanwhile...
+
+	// Release the sound
+	sound.releaseSound(soundSample);
 
 	return (true);
 }
@@ -210,8 +227,12 @@ Game::Process(float deltaTime)
 		Enemy* ene = *itEnemy;
 		ene->Process(deltaTime);
 		if (pPlayerShip->IsCollidingWith(**itEnemy)) {
+			int x = ene->GetPositionX();
+			int y = ene->GetPositionY();
+			
 			delete *itEnemy;
 			itEnemy = pEnemyVector.erase(itEnemy);
+			//SpawnExplosion(x, y);
 			hitCount++;
 		}
 		else
@@ -219,12 +240,15 @@ Game::Process(float deltaTime)
 	}
 
 	// W02.3: Process each bullet in the container.
-	for (int i = 0; i < pBulletVector.size(); i++) {
-		pBulletVector[i]->Process(deltaTime);
-	}
 	
 	// W02.1: Update player...
 	pPlayerShip->Process(deltaTime);
+	for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
+	{
+		explosion* ex = *itExplosion;
+		ex->ProcessAnim(deltaTime);
+	}
+	
 	
 
 	//itEnemy = pEnemyVector.begin();
@@ -271,6 +295,10 @@ Game::Draw(BackBuffer& backBuffer)
 		// W02.3: Draw all bullets in container...
 		for (int i = 0; i < pBulletVector.size(); i++) {
 			pBulletVector[i]->Draw(backBuffer);
+		}
+
+		for (int i = 0; i < pExplosionVector.size(); i++) {
+			pExplosionVector[i]->DrawAnim(backBuffer);
 		}
 
 		// W02.1: Draw the player ship...
@@ -327,22 +355,25 @@ Game::ResetMovement()
 void 
 Game::FireSpaceShipBullet()
 {
-	// W02.3: Load the player bullet sprite.      
-	Sprite*	bulletSprite = m_pBackBuffer->CreateSprite("assets\\bullet.png");
 
-	// W02.3: Create a new bullet object.
-	bullet* b = new bullet();
-	b->Initialise(bulletSprite);
-	int x = pPlayerShip->GetPositionX();
-	int y = pPlayerShip->GetPositionY();
-	
 
-	b->setX(x);
-	b->setY(y);
-	// W02.3: Set the bullets vertical velocity.
-	b->SetVerticalVelocity(-10);
-	// W02.3: Add the new bullet to the bullet container.
-	pBulletVector.push_back(b);
+
+	//// W02.3: Load the player bullet sprite.      
+	//Sprite*	bulletSprite = m_pBackBuffer->CreateSprite("assets\\bullet.png");
+
+	//// W02.3: Create a new bullet object.
+	//bullet* b = new bullet();
+	//b->Initialise(bulletSprite);
+	//int x = pPlayerShip->GetPositionX();
+	//int y = pPlayerShip->GetPositionY();
+	//
+
+	//b->setX(x);
+	//b->setY(y);
+	//// W02.3: Set the bullets vertical velocity.
+	//b->SetVerticalVelocity(-10);
+	//// W02.3: Add the new bullet to the bullet container.
+	//pBulletVector.push_back(b);
 	
 }
 
@@ -352,7 +383,6 @@ Game::SpawnEnemy(int x, int y)
 {
 	// W02.2: Load the alien enemy sprite file.
 	Sprite* enemySprite = m_pBackBuffer->CreateSprite("assets\\alienenemy.png");
-
 
 	// W02.2: Create a new Enemy object.
 	Enemy* e = new Enemy(enemySprite, x, y, 0.0f, 0.0f, false);
@@ -364,6 +394,25 @@ Game::SpawnEnemy(int x, int y)
 
 	// W02.2: Add the new Enemy to the enemy container.
 	pEnemyVector.push_back(e);
+}
+
+// W02.2: Spawn a Explosion in game.
+void
+Game::SpawnExplosion(int x, int y)
+{
+	// W02.2: Load the alien enemy sprite file.
+	AnimatedSprite* explosionSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\explosion.png");
+
+	// W02.2: Create a new Enemy object.
+	explosion* e = new explosion();
+	e->InitialiseAnim(explosionSprite);
+	e->setAnimX(x);
+	e->setAnimY(y);
+	int speed = 1 + (rand() % (int)(10 - 1 + 1));
+	e->SetVerticalVelocity(speed);
+
+	// W02.2: Add the new Enemy to the enemy container.
+	pExplosionVector.push_back(e);
 }
 
 float RandomFloat(float a, float b) {

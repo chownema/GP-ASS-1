@@ -5,8 +5,10 @@
 
 // Local includes:
 #include "sprite.h"
+#include "animatedsprite.h"
 #include "backbuffer.h"
 #include "logmanager.h"
+
 
 // Library includes:
 #include <cassert>
@@ -44,6 +46,15 @@ Entity::Initialise(Sprite* sprite)
 	return (true);
 }
 
+bool
+Entity::InitialiseAnim(AnimatedSprite* sprite)
+{
+	assert(sprite);
+	m_pAnimSprite = sprite;
+
+	return (true);
+}
+
 void 
 Entity::Process(float deltaTime)
 {
@@ -66,11 +77,24 @@ Entity::Process(float deltaTime)
 	}
 }
 
+void
+Entity::ProcessAnim(float deltaTime)
+{
+	m_pAnimSprite->Process(deltaTime);
+}
+
 void 
 Entity::Draw(BackBuffer& backBuffer)
 {
 	assert(m_pSprite);
 	m_pSprite->Draw(backBuffer);
+}
+
+void
+Entity::DrawAnim(BackBuffer& backBuffer)
+{
+	assert(m_pAnimSprite);
+	m_pAnimSprite->Draw(backBuffer);
 }
 
 bool
@@ -150,6 +174,20 @@ Entity::setY(int y)
 {
 	m_y = y;
 	m_pSprite->SetY(y);
+}
+
+void
+Entity::setAnimX(int x)
+{
+	m_x = x;
+	m_pAnimSprite->SetX(x);
+}
+
+void
+Entity::setAnimY(int y)
+{
+	m_y = y;
+	m_pAnimSprite->SetY(y);
 }
 
 
