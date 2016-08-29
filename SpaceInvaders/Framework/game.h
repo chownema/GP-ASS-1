@@ -27,10 +27,15 @@ public:
 	bool DoGameLoop();
 	void Quit();
 
-	void MoveSpaceShipLeft();
-	void MoveSpaceShipRight();
-	void MoveSpaceShipUp();
-	void MoveSpaceShipDown();
+	void MovePlayerLeft();
+	void MovePlayerRight();
+	void MovePlayerUp();
+	void MovePlayerDown();
+
+	void StopMovePlayerHorizontal();
+	void StopMovePlayerVertical();
+
+
 	void ResetMovement();
 	void FireSpaceShipBullet();
 

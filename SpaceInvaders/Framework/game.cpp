@@ -324,8 +324,10 @@ Game::Quit()
 	m_looping = false;
 }
 
+/* Player movements */
+
 void 
-Game::MoveSpaceShipLeft()
+Game::MovePlayerLeft()
 {
 	// W02.1: Tell the player ship to move left.
 	pPlayerShip->SetHorizontalVelocity(-5);
@@ -333,24 +335,40 @@ Game::MoveSpaceShipLeft()
 
 // W02.1: Add the method to tell the player ship to move right...
 void
-Game::MoveSpaceShipRight()
+Game::MovePlayerRight()
 {
 	// W02.1: Tell the player ship to move Right.
 	pPlayerShip->SetHorizontalVelocity(5);
 }
 
 void
-Game::MoveSpaceShipUp()
+Game::MovePlayerUp()
 {
 	// W02.1: Tell the player ship to move Right.
 	pPlayerShip->SetVerticalVelocity(-5);
 }
 
 void
-Game::MoveSpaceShipDown()
+Game::MovePlayerDown()
 {
 	// W02.1: Tell the player ship to move Right.
 	pPlayerShip->SetVerticalVelocity(5);
+}
+
+/* Reset movement methods */
+
+void
+Game::StopMovePlayerHorizontal()
+{
+	// W02.1: Tell the player ship to move left.
+	pPlayerShip->SetHorizontalVelocity(0);
+}
+
+void
+Game::StopMovePlayerVertical()
+{
+	// W02.1: Tell the player ship to move Right.
+	pPlayerShip->SetVerticalVelocity(0);
 }
 
 void

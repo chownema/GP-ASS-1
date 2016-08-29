@@ -34,6 +34,10 @@ InputHandler::Initialise()
 {
 	int numControllesr = SDL_NumJoysticks();
 	m_pGameController = SDL_JoystickOpen(0);
+	moveDown = false;
+	moveUp = false;
+	moveLeft = false;
+	moveRight = false;
 	//assert(m_pGameController);
 
 	return (true);
@@ -57,27 +61,65 @@ InputHandler::ProcessInput(Game& game)
 			// W02.3: Tell the game to fire a player bullet...
 			// Need to fix movement
 			if (e.key.keysym.sym == SDLK_LEFT) {
-				game.MoveSpaceShipLeft();
+				moveLeft = true;
 			}
-			else if (e.key.keysym.sym == SDLK_RIGHT) {
-				game.MoveSpaceShipRight();
+			if (e.key.keysym.sym == SDLK_RIGHT) {
+				moveRight = true;
 			}
-			else if (e.key.keysym.sym == SDLK_UP) {
-				game.MoveSpaceShipUp();
+			if (e.key.keysym.sym == SDLK_UP) {
+				moveUp = true;
 			}
-			else if (e.key.keysym.sym == SDLK_DOWN) {
-				game.MoveSpaceShipDown();
+			if (e.key.keysym.sym == SDLK_DOWN) {
+				moveDown = true;
 			}
-			else if (e.key.keysym.sym == SDLK_SPACE) {
-				game.FireSpaceShipBullet();
+			if (e.key.keysym.sym == SDLK_SPACE) {
+				
 			}
 		}
 		else if (e.type == SDL_KEYUP) {
-			if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_DOWN
-				|| e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_LEFT) {
-				game.ResetMovement();
+			//if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_DOWN
+			//	|| e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_LEFT) {
+			//	game.ResetMovement();
+			//}
+			if (e.key.keysym.sym == SDLK_LEFT) {
+				moveLeft = false;
+				game.StopMovePlayerHorizontal();
+			}
+			if (e.key.keysym.sym == SDLK_RIGHT) {
+				moveRight = false;
+				game.StopMovePlayerHorizontal();
+			}
+			if (e.key.keysym.sym == SDLK_UP) {
+				moveUp = false;
+				game.StopMovePlayerVertical();
+			}
+			if (e.key.keysym.sym == SDLK_DOWN) {
+				moveDown = false;
+				game.StopMovePlayerVertical();
 			}
 		}
+
+
+		if (moveUp)
+		{
+			game.MovePlayerUp();
+		}
+
+		if (moveDown)
+		{
+			game.MovePlayerDown();
+		}
+
+		if (moveLeft)
+		{
+			game.MovePlayerLeft();
+		}
+
+		if (moveRight)
+		{
+			game.MovePlayerRight();
+		}
+
 
 	}
 }

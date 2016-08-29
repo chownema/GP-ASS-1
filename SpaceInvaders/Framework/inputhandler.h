@@ -26,6 +26,10 @@ private:
 
 	//Member Data:
 public:
+	bool moveUp;
+	bool moveDown;
+	bool moveLeft; 
+	bool moveRight;
 
 protected:
 	SDL_Joystick* m_pGameController;
