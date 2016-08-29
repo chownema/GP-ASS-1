@@ -73,14 +73,11 @@ InputHandler::ProcessInput(Game& game)
 				moveDown = true;
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
-				
+				// no shooting only peaceful cat
+
 			}
 		}
 		else if (e.type == SDL_KEYUP) {
-			//if (e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_DOWN
-			//	|| e.key.keysym.sym == SDLK_RIGHT || e.key.keysym.sym == SDLK_LEFT) {
-			//	game.ResetMovement();
-			//}
 			if (e.key.keysym.sym == SDLK_LEFT) {
 				moveLeft = false;
 				game.StopMovePlayerHorizontal();
