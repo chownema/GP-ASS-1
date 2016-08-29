@@ -7,7 +7,7 @@ class BackBuffer;
 class InputHandler;
 class Sprite;
 class PlayerShip;
-class explosion;
+class AnimEntity;
 class bullet;
 class Enemy;
 class SoundSystem;
@@ -76,10 +76,10 @@ protected:
 	std::vector<Enemy*> pEnemyVector;
 	// W02.3: Add a bullet container field.
 	std::vector<bullet*> pBulletVector;
-	std::vector<explosion*> pExplosionVector;
+	std::vector<AnimEntity*> pExplosionVector;
 	
 	// Vector Iterators
-	std::vector<explosion*>::iterator itExplosion;
+	std::vector<AnimEntity*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
 	std::vector<bullet*>::iterator itBullet;
 	// FMOD

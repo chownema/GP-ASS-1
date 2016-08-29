@@ -25,10 +25,12 @@ public:
 	void SetFrameSpeed(float f);
 	void SetFrameWidth(int w);
 	void SetFrameHeight(int h);
+	void SetNumOfFrames(int f);
 
 	int GetFrameHeight();
 	int GetFrameWidth();
 	int GetCurrentFrame();
+	int GetNumOfFrames();
 
 	void Pause();
 	bool IsPaused();
@@ -57,6 +59,7 @@ protected:
 
 	float m_timeElapsed;
 	int m_currentFrame;
+	int m_numOfFrames;
 
 	bool m_paused;
 	bool m_loop;

@@ -51,34 +51,33 @@ void
 AnimatedSprite::Process(float deltaTime)
 {
 	// W02.4: If not paused...
-	if (!IsPaused())
+	if (!m_paused)
 	{
 		// W02.4: Count the time elapsed.
-		m_timeElapsed += 1;
+		m_timeElapsed += deltaTime;
+
 		// W02.4: If the time elapsed is greater than the frame speed.
-		if (m_timeElapsed > m_frameSpeed)
+		if (m_timeElapsed >= m_frameSpeed)
 		{
 			// W02.4: Move to the next frame.
-			AddFrame(m_currentFrame);
-			m_currentFrame += 1;
+			m_currentFrame++;
 			// W02.4: Reset the time elapsed counter.
 			m_timeElapsed = 0;
 		}
-		// W02.4: If the current frame is greater than the number 
-		//          of frame in this animation...
-		if (m_currentFrame > m_frameWidth)
+
+		// W02.4: If the current frame is greater than the number of frames in this animation...
+		if (m_currentFrame > m_numOfFrames)
 		{
 			// W02.4: Reset to the first frame.
-			m_currentFrame = 0;
-		}
-		// W02.4: Stop the animation if it is not looping...
-		if (IsLooping() == false)
-		{
-			Pause();
+			if (m_loop)
+				m_currentFrame = 0;
+			// W02.4: Stop the animation if it is not looping...
+			else
+				Pause();
 		}
 	}
-
 }
+
 
 void
 AnimatedSprite::Draw(BackBuffer& backbuffer)
@@ -86,9 +85,9 @@ AnimatedSprite::Draw(BackBuffer& backbuffer)
 	// W02.4: Draw the particular frame into the backbuffer.
 	backbuffer.DrawAnimatedSprite(*this);
 	//          What is the current frame's x coordinate?
-	m_currentFrame;
+	//m_currentFrame;
 	//          What is the frame width?
-	SetFrameWidth(320);
+	//SetFrameWidth(320);
 	// Set frame height
 }
 
@@ -146,6 +145,18 @@ void
 AnimatedSprite::SetLooping(bool b)
 {
 	m_loop = b;
+}
+
+void
+AnimatedSprite::SetNumOfFrames(int n)
+{
+	m_numOfFrames = n;
+}
+
+int
+AnimatedSprite::GetNumOfFrames()
+{
+	return m_numOfFrames;
 }
 
 int

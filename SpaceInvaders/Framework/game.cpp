@@ -13,7 +13,8 @@
 #include "Enemy.h"
 #include "texture.h"
 #include "math.h"
-#include "explosion.h"
+#include "AnimEntity.h"
+#include "AnimatedSprite.h"
 #include "SoundSystem.h"
 
 
@@ -31,6 +32,7 @@ const int width = 800;
 const int height = 600;
 int bulletSpeed = 5;
 int comparisonTime = 0;
+
 int hitCount = 0;
 
 Game&
@@ -150,11 +152,11 @@ Game::Initialise()
 	m_lag = 0.0f;
 
 	// Create a sample sound
-	SoundClass soundSample;
-	sound.createSound(&soundSample, "sounds\\drumloop.wav");
+	//SoundClass soundSample;
+	//sound.createSound(&soundSample, "sounds\\drumloop.wav");
 
-	// Play the sound, with loop mode
-	sound.playSound(soundSample, true);
+	//// Play the sound, with loop mode
+	//sound.playSound(soundSample, true);
 
 	// Do something meanwhile...
 
@@ -232,7 +234,7 @@ Game::Process(float deltaTime)
 			
 			delete *itEnemy;
 			itEnemy = pEnemyVector.erase(itEnemy);
-			//SpawnExplosion(x, y);
+			SpawnExplosion(x, y);
 			hitCount++;
 		}
 		else
@@ -243,12 +245,20 @@ Game::Process(float deltaTime)
 	
 	// W02.1: Update player...
 	pPlayerShip->Process(deltaTime);
-	for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
+
+	//for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
+	//{
+	//	AnimEntity* ex = *itExplosion;
+	//	ex->Process(deltaTime);
+	//}
+	for (int i = 0; i < pExplosionVector.size(); i++)
 	{
-		explosion* ex = *itExplosion;
-		ex->ProcessAnim(deltaTime);
+		pExplosionVector[i]->Process(deltaTime);
 	}
+
 	
+
+
 	
 
 	//itEnemy = pEnemyVector.begin();
@@ -298,7 +308,7 @@ Game::Draw(BackBuffer& backBuffer)
 		}
 
 		for (int i = 0; i < pExplosionVector.size(); i++) {
-			pExplosionVector[i]->DrawAnim(backBuffer);
+			pExplosionVector[i]->Draw(backBuffer);
 		}
 
 		// W02.1: Draw the player ship...
@@ -404,10 +414,15 @@ Game::SpawnExplosion(int x, int y)
 	AnimatedSprite* explosionSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\explosion.png");
 
 	// W02.2: Create a new Enemy object.
-	explosion* e = new explosion();
-	e->InitialiseAnim(explosionSprite);
-	e->setAnimX(x);
-	e->setAnimY(y);
+	AnimEntity* e = new AnimEntity();
+	e->Initialise(explosionSprite);
+	explosionSprite->SetFrameSpeed(0.4f);
+	explosionSprite->SetFrameWidth(64);
+	explosionSprite->SetFrameHeight(64);
+	explosionSprite->SetNumOfFrames(4);
+
+	e->setX(x);
+	e->setY(y);
 	int speed = 1 + (rand() % (int)(10 - 1 + 1));
 	e->SetVerticalVelocity(speed);
 

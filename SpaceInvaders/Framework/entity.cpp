@@ -16,7 +16,7 @@
 #include <algorithm>
 
 
-// Size of window
+// Size of window put in game h class
 const int width = 800;
 const int height = 600;
 
