@@ -152,11 +152,11 @@ Game::Initialise()
 	m_lag = 0.0f;
 
 	// Create a sample sound
-	//SoundClass soundSample;
-	//sound.createSound(&soundSample, "sounds\\drumloop.wav");
+	SoundClass soundSample;
+	sound.createSound(&soundSample, "sounds\\drumloop.wav");
 
-	//// Play the sound, with loop mode
-	//sound.playSound(soundSample, true);
+	// Play the sound, with loop mode
+	sound.playSound(soundSample, true);
 
 	// Do something meanwhile...
 
@@ -210,8 +210,8 @@ Game::Process(float deltaTime)
 	
 	comparisonTime++;
 	if (0==comparisonTime % 10) {
-		int x = (40 + (rand() % (int)(700 - 40 + 1)));
-		SpawnEnemy(x, 0);
+		int x = (0 + (rand() % (int)(3 - 0 + 1)));
+		SpawnEnemy(x);
 	}
 
 	// Frame Counter:
@@ -223,15 +223,15 @@ Game::Process(float deltaTime)
 	}
 
 	// Update the game world simulation:
-	
 	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
 	{
 		Enemy* ene = *itEnemy;
 		ene->Process(deltaTime);
-		if (pPlayerShip->IsCollidingWith(**itEnemy)) {
-			int x = ene->GetPositionX();
-			int y = ene->GetPositionY();
-			
+		int x = ene->GetPositionX();
+		int y = ene->GetPositionY();
+		if (pPlayerShip->IsCollidingWith(**itEnemy) || x > width+20
+			|| x < - 20 || y > height + 20
+			|| y < - 20) {
 			delete *itEnemy;
 			itEnemy = pEnemyVector.erase(itEnemy);
 			SpawnExplosion(x, y);
@@ -407,18 +407,45 @@ Game::FireSpaceShipBullet()
 
 // W02.2: Spawn a Enemy in game.
 void 
-Game::SpawnEnemy(int x, int y)
-{
+Game::SpawnEnemy(int direction)
+{	
+	int x = 0;
+	int y = 0;
 	// W02.2: Load the alien enemy sprite file.
 	Sprite* enemySprite = m_pBackBuffer->CreateSprite("assets\\alienenemy.png");
 
 	// W02.2: Create a new Enemy object.
 	Enemy* e = new Enemy(enemySprite, x, y, 0.0f, 0.0f, false);
 	e->Initialise(enemySprite);
-	e->setX(x);
-	e->setY(y);
 	int speed = 1 + (rand() % (int)(10 - 1 + 1));
-	e->SetVerticalVelocity(speed);
+	if (direction == 0){ // up
+		y = 0;
+		x = 0 + (rand() % (int)(width - 0 + 1));
+		e->setX(x);
+		e->setY(y);
+		e->SetVerticalVelocity(speed);
+	}
+	else if (direction == 1){ // down
+		y = height;
+		x = 0 + (rand() % (int)(width - 0 + 1));
+		e->setX(x);
+		e->setY(y);
+		e->SetVerticalVelocity(-speed);
+	}
+	else if (direction == 2){ // left
+		x = 0;
+		y = 0 + (rand() % (int)(height - 0 + 1));
+		e->setX(x);
+		e->setY(y);
+		e->SetHorizontalVelocity(speed);
+	}
+	else if (direction == 3){ // right
+		x = width;
+		y = 0 + (rand() % (int)(height - 0 + 1));
+		e->setX(x);
+		e->setY(y);
+		e->SetHorizontalVelocity(-speed);
+	}
 
 	// W02.2: Add the new Enemy to the enemy container.
 	pEnemyVector.push_back(e);

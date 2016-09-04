@@ -39,7 +39,7 @@ public:
 	void ResetMovement();
 	void FireSpaceShipBullet();
 
-	void SpawnEnemy(int x, int y);
+	void SpawnEnemy(int direction);
 	void SpawnExplosion(int x, int y);
 
 
