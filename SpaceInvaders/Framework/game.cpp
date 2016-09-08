@@ -18,7 +18,6 @@
 #include "SoundSystem.h"
 #include "Parser.h"
 
-
 // Library includes:
 #include <cassert>
 #include <SDL.h>
@@ -248,6 +247,12 @@ Game::Draw(BackBuffer& backBuffer)
 
 		// W02.1: Draw the player ship...
 		pPlayer->Draw(backBuffer);
+
+
+		// Draw text according to gamestate
+
+		SDL_Color colour = { 0, 0, 0, 255 };
+		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "Game Over", 24, 100, 100);
 	
 
 	backBuffer.Present();

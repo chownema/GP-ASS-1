@@ -25,6 +25,7 @@ Player::damagePlayerCheck(int damage)
 	//	this->SetDead(true);
 	//}
 	//return this->IsDead();
+	return true;
 }
 
 void

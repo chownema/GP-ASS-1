@@ -8,6 +8,9 @@ class Sprite;
 class AnimatedSprite;
 struct SDL_Window;
 struct SDL_Renderer;
+struct SDL_Color;
+#include <string>
+using namespace std;
 
 class BackBuffer
 {
@@ -30,6 +33,7 @@ public:
 	void DrawAnimatedSprite(AnimatedSprite& sprite);
 	void DrawRectangle(int x1, int y1, int x2, int y2);
 	void DrawLine(int x1, int y1, int x2, int y2);
+	void DrawTextOnScreen(SDL_Color colour, string fontPath, const char* text, int fontSize, int x, int y);
 
 	Sprite* CreateSprite(const char* pcFilename);
 	AnimatedSprite* CreateAnimatedSprite(const char* pcFilename);

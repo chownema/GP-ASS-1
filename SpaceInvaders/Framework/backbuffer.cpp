@@ -9,6 +9,7 @@
 #include "sprite.h"
 #include "texture.h"
 #include "animatedsprite.h"
+#include "SDL_ttf.h"
 
 // Library includes:
 #include <SDL.h>
@@ -36,6 +37,8 @@ BackBuffer::~BackBuffer()
 	SDL_DestroyWindow(m_pWindow);
 	m_pWindow = 0;
 
+	// Release memory SDL
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -54,7 +57,8 @@ BackBuffer::Initialise(int width, int height)
 	else
 	{
 		m_pWindow = SDL_CreateWindow("717130 Game Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_SHOWN);
-
+		// Initialse TTF
+		TTF_Init();
 		if (m_pWindow == 0)
 		{
 			LogSDLError();
@@ -87,6 +91,33 @@ BackBuffer::Initialise(int width, int height)
 	m_pTextureManager->Initialise(m_pRenderer);
 
 	return (true);
+}
+
+void
+BackBuffer::DrawTextOnScreen(SDL_Color colour, string font, const char* text, int size, int x, int y) 
+{
+	// init font, surface, and texture
+	TTF_Font* fontTTF = TTF_OpenFont(font.c_str(), size);
+	SDL_Surface* surface = TTF_RenderText_Solid(fontTTF, text, colour);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(m_pRenderer, surface);
+
+	int textWidth;
+	int textHeight;
+	SDL_QueryTexture(texture, NULL, NULL, &textWidth, &textHeight);
+
+	// Set destination to render text
+	SDL_Rect dest;
+	dest.w = textWidth;
+	dest.h = textHeight;
+	dest.x = x;
+	dest.y = y;
+
+	// Render Text on screen
+	SDL_RenderCopy(m_pRenderer, texture, 0, &dest);
+	// Remove surface to free memory
+	TTF_CloseFont(fontTTF);
+	SDL_FreeSurface(surface);
+	SDL_DestroyTexture(texture);
 }
 
 void 
