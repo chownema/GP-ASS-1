@@ -74,6 +74,7 @@ InputHandler::ProcessInput(Game& game)
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
 				// no shooting only peaceful cat
+				game.FireSpaceShipBullet();
 
 			}
 		}

@@ -87,7 +87,6 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="AnimEntity.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="bullet.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="Parser.h" />
@@ -109,7 +108,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="bullet.cpp" />
     <ClCompile Include="SoundSystem.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />

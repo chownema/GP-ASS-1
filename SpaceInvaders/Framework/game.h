@@ -8,7 +8,6 @@ class InputHandler;
 class Sprite;
 class Player;
 class AnimEntity;
-class bullet;
 class Enemy;
 class SoundSystem;
 
@@ -46,8 +45,20 @@ public:
 
 	
 protected:
+	// Draw and Process methods for their own respective GameStates
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
+
+	void ProcessMenuState(float deltaTime);
+	void DrawMenuState(BackBuffer& backBuffer);
+
+	void ProcessPauseState(float deltaTime);
+	void DrawPauseState(BackBuffer& backBuffer);
+
+	void ProcessGameOverState(float deltaTime);
+	void DrawGameOverState(BackBuffer& backBuffer);
+	
+	void resumeInit();
 
 private:
 	Game(const Game& game);
@@ -64,6 +75,11 @@ protected:
 	InputHandler* m_pInputHandler;
 	bool m_looping;
 
+	// FSM
+	enum m_gameState_e {
+		playing = 0, paused, menu, lost, shop
+	} y2k;
+
 	// Simulation Counters:
 	float m_elapsedSeconds;
 	float m_lag;
@@ -73,22 +89,19 @@ protected:
 	int m_FPS;
 	int m_numUpdates;
 	bool m_drawDebugInfo;
+	int m_gameState = playing; // set init value for start of game
 
 	// Game Entities:
-	// W02.1: Add a PlayerShip field
 	Player* pPlayer;
-	// W02.2: Add an alien enemy container field.
 	std::vector<Enemy*> pEnemyVector;
-	// W02.3: Add a bullet container field.
-	std::vector<bullet*> pBulletVector;
 	std::vector<AnimEntity*> pExplosionVector;
 	
 	// Vector Iterators
 	std::vector<AnimEntity*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
-	std::vector<bullet*>::iterator itBullet;
 	// FMOD
 	SoundSystem sound;
+
 
 
 private:

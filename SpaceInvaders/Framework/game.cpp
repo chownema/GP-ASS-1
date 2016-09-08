@@ -9,7 +9,6 @@
 #include "logmanager.h"
 #include "sprite.h"
 #include "Player.h"
-#include "bullet.h"
 #include "Enemy.h"
 #include "texture.h"
 #include "math.h"
@@ -146,17 +145,37 @@ Game::DoGameLoop()
 		m_executionTime += deltaTime;
 
 		m_lag += deltaTime;
+		// GameState dictactes process and drawn
 
-		while (m_lag >= stepSize)
-		{
-			Process(stepSize);
-
-			m_lag -= stepSize;
-
-			++m_numUpdates;
+		// Playing State
+		if (m_gameState == 0) {
+			while (m_lag >= stepSize)
+			{
+				Process(stepSize);
+				m_lag -= stepSize;
+				++m_numUpdates;
+			}
+			Draw(*m_pBackBuffer);
 		}
-		
-		Draw(*m_pBackBuffer);
+		// Paused State
+		else if (m_gameState == 1) {
+			while (m_lag >= stepSize)
+			{
+				ProcessPauseState(stepSize);
+				m_lag -= stepSize;
+				++m_numUpdates;
+			}
+			Draw(*m_pBackBuffer);
+			
+		}
+		// Quit State
+		else if (m_gameState == 2) {
+
+		}
+		// Menu State
+		else if (m_gameState == 3) {
+
+		}
 	}
 
 	SDL_Delay(1);
@@ -222,6 +241,48 @@ Game::Process(float deltaTime)
 	
 }
 
+void
+Game::resumeInit() {
+	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
+	{
+		Enemy* ene = *itEnemy;
+		ene->resumeEnemy();
+		itEnemy++;
+	}
+}
+
+void
+Game::ProcessPauseState(float deltaTime)
+{
+
+	// Count total simulation time elapsed:
+	m_elapsedSeconds += deltaTime;
+
+	// Frame Counter:
+	if (m_elapsedSeconds > 1)
+	{
+		m_elapsedSeconds -= 1;
+		m_FPS = m_frameCount;
+		m_frameCount = 0;
+	}
+
+	// Process Enemies with Player
+	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
+	{
+		Enemy* ene = *itEnemy;
+		ene->pauseEnemy();
+		itEnemy++;
+	}
+
+	// Update player
+	pPlayer->Process(deltaTime);
+
+	for (int i = 0; i < pExplosionVector.size(); i++)
+	{
+		pExplosionVector[i]->Process(deltaTime);
+	}
+}
+
 
 void 
 Game::Draw(BackBuffer& backBuffer)
@@ -235,12 +296,6 @@ Game::Draw(BackBuffer& backBuffer)
 			pEnemyVector[i]->Draw(backBuffer);
 		}
 
-
-		// W02.3: Draw all bullets in container...
-		for (int i = 0; i < pBulletVector.size(); i++) {
-			pBulletVector[i]->Draw(backBuffer);
-		}
-
 		for (int i = 0; i < pExplosionVector.size(); i++) {
 			pExplosionVector[i]->Draw(backBuffer);
 		}
@@ -250,7 +305,6 @@ Game::Draw(BackBuffer& backBuffer)
 
 
 		// Draw text according to gamestate
-
 		SDL_Color colour = { 0, 0, 0, 255 };
 		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "Game Over", 24, 100, 100);
 	
@@ -323,26 +377,12 @@ Game::ResetMovement()
 void 
 Game::FireSpaceShipBullet()
 {
-
-
-
-	//// W02.3: Load the player bullet sprite.      
-	//Sprite*	bulletSprite = m_pBackBuffer->CreateSprite("assets\\bullet.png");
-
-	//// W02.3: Create a new bullet object.
-	//bullet* b = new bullet();
-	//b->Initialise(bulletSprite);
-	//int x = pPlayerShip->GetPositionX();
-	//int y = pPlayerShip->GetPositionY();
-	//
-
-	//b->setX(x);
-	//b->setY(y);
-	//// W02.3: Set the bullets vertical velocity.
-	//b->SetVerticalVelocity(-10);
-	//// W02.3: Add the new bullet to the bullet container.
-	//pBulletVector.push_back(b);
-	
+	if (m_gameState == playing)
+		m_gameState = paused;
+	else {
+		m_gameState = playing;
+		resumeInit();
+	}	
 }
 
 // W02.2: Spawn a Enemy in game.
