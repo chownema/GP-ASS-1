@@ -12,6 +12,7 @@ class Enemy;
 class SoundSystem;
 
 #include "SoundSystem.h"
+#include "InputControls.h"
 #include <vector>
 
 class Game
@@ -34,13 +35,13 @@ public:
 	void StopMovePlayerHorizontal();
 	void StopMovePlayerVertical();
 
-
 	void ResetMovement();
-	void FireSpaceShipBullet();
+	void PauseGame();
 
 	void SpawnEnemy(int direction);
 	void SpawnExplosion(int x, int y);
 
+	void InputRouter(InputControls input);
 
 
 	
@@ -76,6 +77,7 @@ protected:
 	bool m_looping;
 
 	// FSM
+	// Game States
 	enum m_gameState_e {
 		playing = 0, paused, menu, lost, shop
 	} y2k;

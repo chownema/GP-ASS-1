@@ -87,6 +87,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="AnimEntity.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="InputControls.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="Parser.h" />

@@ -16,6 +16,7 @@
 #include "AnimatedSprite.h"
 #include "SoundSystem.h"
 #include "Parser.h"
+#include "InputControls.h"
 
 // Library includes:
 #include <cassert>
@@ -318,6 +319,27 @@ Game::Quit()
 	m_looping = false;
 }
 
+/* Input Methods */
+
+void
+Game::InputRouter(InputControls input) {
+	// Evaluate string input
+	switch (input){
+	case InputControls::pMoveUp:
+		MovePlayerUp();
+		break;
+	case InputControls::pMoveDown:
+		MovePlayerDown();
+		break;
+	case InputControls::pMoveLeft:
+		MovePlayerLeft();
+		break;
+	case InputControls::pMoveRight:
+		MovePlayerRight();
+		break;
+	}
+}
+
 /* Player movements */
 
 void 
@@ -375,7 +397,7 @@ Game::ResetMovement()
 
 // W02.3: Space a Bullet in game.
 void 
-Game::FireSpaceShipBullet()
+Game::PauseGame()
 {
 	if (m_gameState == playing)
 		m_gameState = paused;

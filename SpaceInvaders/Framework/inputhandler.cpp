@@ -6,6 +6,7 @@
 // Local includes:
 #include "game.h"
 #include "fmod.hpp"
+#include "InputControls.h"
 
 // Library includes:
 #include <cassert>
@@ -74,7 +75,7 @@ InputHandler::ProcessInput(Game& game)
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
 				// no shooting only peaceful cat
-				game.FireSpaceShipBullet();
+				game.PauseGame();
 
 			}
 		}
@@ -100,22 +101,26 @@ InputHandler::ProcessInput(Game& game)
 
 		if (moveUp)
 		{
-			game.MovePlayerUp();
+			//game.MovePlayerUp();
+			game.InputRouter(InputControls::pMoveUp);
 		}
 
 		if (moveDown)
 		{
-			game.MovePlayerDown();
+			//game.MovePlayerDown();
+			game.InputRouter(InputControls::pMoveDown);
 		}
 
 		if (moveLeft)
 		{
-			game.MovePlayerLeft();
+			//game.MovePlayerLeft();
+			game.InputRouter(InputControls::pMoveLeft);
 		}
 
 		if (moveRight)
 		{
-			game.MovePlayerRight();
+			//game.MovePlayerRight();
+			game.InputRouter(InputControls::pMoveRight);
 		}
 
 
