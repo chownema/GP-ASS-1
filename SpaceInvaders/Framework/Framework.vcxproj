@@ -90,6 +90,7 @@
     <ClInclude Include="bullet.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SoundSystem.h" />
     <ClInclude Include="sprite.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="logmanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="bullet.cpp" />
     <ClCompile Include="SoundSystem.cpp" />

@@ -16,6 +16,7 @@
 #include "AnimEntity.h"
 #include "AnimatedSprite.h"
 #include "SoundSystem.h"
+#include "Parser.h"
 
 
 // Library includes:
@@ -79,33 +80,9 @@ Game::~Game()
 bool 
 Game::Initialise()
 {
-	//// Intit FMOD object
-	//FMOD_RESULT System_Create(FMOD::System **system);
-	////System::init(,,);
-	////FSOUND_Init(44100, 32, 0);
-	//FMOD_RESULT result;
-	//FMOD::System *system = NULL;
-
-	//result = FMOD::System_Create(&system);      // Create the main system object.
-	//if (result != FMOD_OK)
-	//{
-	//	printf("FMOD error! (%d) %s\n", result, "error 1");
-	//	exit(-1);
-	//}
-
-	//result = system->init(512, FMOD_INIT_NORMAL, 0);    // Initialize FMOD.
-	//if (result != FMOD_OK)
-	//{
-	//	printf("FMOD error! (%d) %s\n", result, "error ");
-	//	exit(-1);
-	//}
-
-	// Fmod Init
+	// Load in data
+	Parser::GetInstance().loadInFile("data.ini");
 	
-
-
-
-
 	m_pBackBuffer = new BackBuffer();
 	if (!m_pBackBuffer->Initialise(width, height))
 	{
@@ -126,9 +103,11 @@ Game::Initialise()
 	Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite("assets\\playership.png");
 	assert(pPlayerSprite);
 	// W02.1: Create the player ship instance.
-	pPlayerShip = new PlayerShip(pPlayerSprite, 0.0f, 500.0f, 0.0f, 0.0f, false);
-	pPlayerShip->setX(500);
+	pPlayerShip = new PlayerShip();
 	pPlayerShip->Initialise(pPlayerSprite);
+	pPlayerShip->setX(width/2);
+	pPlayerShip->setY(height/2);
+	
 	
 	// W02.2: Spawn four rows of 14 alien enemies.
 	//int x = 40;
@@ -151,17 +130,19 @@ Game::Initialise()
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
 
-	// Create a sample sound
-	SoundClass soundSample;
-	sound.createSound(&soundSample, "sounds\\drumloop.wav");
+	//// Create a sample sound
+	//SoundClass soundSample;
+	//sound.createSound(&soundSample, "sounds\\drumloop.wav");
 
-	// Play the sound, with loop mode
-	sound.playSound(soundSample, true);
+	//// Play the sound, with loop mode
+	//sound.playSound(soundSample, true);
 
-	// Do something meanwhile...
+	//// Do something meanwhile...
 
-	// Release the sound
-	//sound.releaseSound(soundSample);
+	//// Release the sound
+	////sound.releaseSound(soundSample);
+
+
 
 	return (true);
 }
@@ -414,10 +395,13 @@ Game::SpawnEnemy(int direction)
 	// W02.2: Load the alien enemy sprite file.
 	Sprite* enemySprite = m_pBackBuffer->CreateSprite("assets\\alienenemy.png");
 
+	int maxSpeed = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
+	int minSpeed = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
+
 	// W02.2: Create a new Enemy object.
-	Enemy* e = new Enemy(enemySprite, x, y, 0.0f, 0.0f, false);
+	Enemy* e = new Enemy();
 	e->Initialise(enemySprite);
-	int speed = 1 + (rand() % (int)(10 - 1 + 1));
+	int speed = minSpeed + (rand() % (int)(maxSpeed - minSpeed + 1));
 	if (direction == 0){ // up
 		y = 0;
 		x = 0 + (rand() % (int)(width - 0 + 1));

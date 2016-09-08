@@ -5,6 +5,6 @@
 class PlayerShip : public Entity
 {
 public:
-	PlayerShip(Sprite* sprite, float x, float y, float velocityx, float velocityy, bool dead);
+	PlayerShip();
 };
 #endif
