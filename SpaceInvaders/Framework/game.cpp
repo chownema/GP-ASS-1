@@ -8,7 +8,7 @@
 #include "inputhandler.h"
 #include "logmanager.h"
 #include "sprite.h"
-#include "PlayerShip.h"
+#include "Player.h"
 #include "bullet.h"
 #include "Enemy.h"
 #include "texture.h"
@@ -97,36 +97,18 @@ Game::Initialise()
 		return (false);
 	}
 
-
-	// W02.1: Load the player ship sprite.
-	// For example: Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite("assets\\playership.png");
+	// Set enemy variables
+	int MAX_SPEED = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
+	int MIN_SPEED = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
+	string SPRITE_LOC = Parser::GetInstance().enemyDoc["sprite_loc"].GetString();
 	Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite("assets\\playership.png");
 	assert(pPlayerSprite);
 	// W02.1: Create the player ship instance.
-	pPlayerShip = new PlayerShip();
-	pPlayerShip->Initialise(pPlayerSprite);
-	pPlayerShip->setX(width/2);
-	pPlayerShip->setY(height/2);
+	pPlayer = new Player();
+	pPlayer->Initialise(pPlayerSprite);
+	pPlayer->setX(width / 2);
+	pPlayer->setY(height / 2);
 	
-	
-	// W02.2: Spawn four rows of 14 alien enemies.
-	//int x = 40;
-	//int y = 0;
-
-	// test enemy for collision
-	//SpawnEnemy(pPlayerShip->GetPositionX(), pPlayerShip->GetPositionY()-49);
-	//
-	//for (int i = 0; i < 3; i++) {
-	//	for (int j = 0; j < 13; j++) {
-	//		SpawnEnemy(x, y);
-	//		x += 55;
-	//	}
-	//	y += 50;
-	//	x = 40;
-	//}
-	
-	
-	// W02.2: Fill the container with these new enemies.
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
 
@@ -204,69 +186,41 @@ Game::Process(float deltaTime)
 	}
 
 	// Update the game world simulation:
+
+	// Process Enemies with Player
 	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
 	{
 		Enemy* ene = *itEnemy;
 		ene->Process(deltaTime);
 		int x = ene->GetPositionX();
 		int y = ene->GetPositionY();
-		if (pPlayerShip->IsCollidingWith(**itEnemy) || x > width+20
-			|| x < - 20 || y > height + 20
-			|| y < - 20) {
-			delete *itEnemy;
-			itEnemy = pEnemyVector.erase(itEnemy);
-			SpawnExplosion(x, y);
-			hitCount++;
+		// If collision end game and kill player
+		if (pPlayer->IsCollidingWith(**itEnemy)) {
+			// Damage player and set dead if no hp left
+		}
+		// if out of bounds remove enemy
+		else if (x > width + 20 || x < -20 || y > height + 20
+			|| y < -20) {
+				delete *itEnemy;
+				itEnemy = pEnemyVector.erase(itEnemy);
+				SpawnExplosion(x, y);
+				hitCount++;
 		}
 		else
 			itEnemy++;
 	}
-
-	// W02.3: Process each bullet in the container.
 	
-	// W02.1: Update player...
-	pPlayerShip->Process(deltaTime);
+	// Update player
+	pPlayer->Process(deltaTime);
 
-	//for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
-	//{
-	//	AnimEntity* ex = *itExplosion;
-	//	ex->Process(deltaTime);
-	//}
 	for (int i = 0; i < pExplosionVector.size(); i++)
 	{
 		pExplosionVector[i]->Process(deltaTime);
 	}
 
+	// If player is dead set game state to OVER
+
 	
-
-
-	
-
-	//itEnemy = pEnemyVector.begin();
-	//itBullet = pBulletVector.begin();
-	//
-	//bool hitEnemy = false;
-	//for (itBullet = pBulletVector.begin(); itBullet < pBulletVector.end();)
-	//{
-	//	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
-	//	{
-	//		bullet* bull = *itBullet;
-	//		Enemy* ene = *itEnemy;
-	//		if (bull->IsCollidingWith(**itEnemy)) {
-	//			bull->SetVerticalVelocity(0);
-	//			itEnemy = pEnemyVector.erase(itEnemy);
-	//			hitEnemy = true;
-	//		}
-	//		else
-	//			itEnemy++;
-	//	}
-	//	if (hitEnemy) {
-	//		itBullet = pBulletVector.erase(itBullet);
-	//		hitEnemy = false;
-	//	}
-	//	else
-	//		itBullet++;
-	//}
 }
 
 
@@ -293,7 +247,7 @@ Game::Draw(BackBuffer& backBuffer)
 		}
 
 		// W02.1: Draw the player ship...
-		pPlayerShip->Draw(backBuffer);
+		pPlayer->Draw(backBuffer);
 	
 
 	backBuffer.Present();
@@ -311,7 +265,7 @@ void
 Game::MovePlayerLeft()
 {
 	// W02.1: Tell the player ship to move left.
-	pPlayerShip->SetHorizontalVelocity(-5);
+	pPlayer->SetHorizontalVelocity(-5);
 }
 
 // W02.1: Add the method to tell the player ship to move right...
@@ -319,21 +273,21 @@ void
 Game::MovePlayerRight()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayerShip->SetHorizontalVelocity(5);
+	pPlayer->SetHorizontalVelocity(5);
 }
 
 void
 Game::MovePlayerUp()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayerShip->SetVerticalVelocity(-5);
+	pPlayer->SetVerticalVelocity(-5);
 }
 
 void
 Game::MovePlayerDown()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayerShip->SetVerticalVelocity(5);
+	pPlayer->SetVerticalVelocity(5);
 }
 
 /* Reset movement methods */
@@ -342,21 +296,21 @@ void
 Game::StopMovePlayerHorizontal()
 {
 	// W02.1: Tell the player ship to move left.
-	pPlayerShip->SetHorizontalVelocity(0);
+	pPlayer->SetHorizontalVelocity(0);
 }
 
 void
 Game::StopMovePlayerVertical()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayerShip->SetVerticalVelocity(0);
+	pPlayer->SetVerticalVelocity(0);
 }
 
 void
 Game::ResetMovement()
 {
-	pPlayerShip->SetHorizontalVelocity(0);
-	pPlayerShip->SetVerticalVelocity(0);
+	pPlayer->SetHorizontalVelocity(0);
+	pPlayer->SetVerticalVelocity(0);
 }
 
 
@@ -392,16 +346,17 @@ Game::SpawnEnemy(int direction)
 {	
 	int x = 0;
 	int y = 0;
+	// Set enemy variables
+	int MAX_SPEED = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
+	int MIN_SPEED = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
+	string SPRITE_LOC = Parser::GetInstance().enemyDoc["sprite_loc"].GetString();
 	// W02.2: Load the alien enemy sprite file.
-	Sprite* enemySprite = m_pBackBuffer->CreateSprite("assets\\alienenemy.png");
-
-	int maxSpeed = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
-	int minSpeed = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
+	Sprite* enemySprite = m_pBackBuffer->CreateSprite(SPRITE_LOC.c_str());
 
 	// W02.2: Create a new Enemy object.
 	Enemy* e = new Enemy();
 	e->Initialise(enemySprite);
-	int speed = minSpeed + (rand() % (int)(maxSpeed - minSpeed + 1));
+	int speed = MIN_SPEED + (rand() % (int)(MAX_SPEED - MIN_SPEED + 1));
 	if (direction == 0){ // up
 		y = 0;
 		x = 0 + (rand() % (int)(width - 0 + 1));

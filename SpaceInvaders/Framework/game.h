@@ -6,7 +6,7 @@
 class BackBuffer;
 class InputHandler;
 class Sprite;
-class PlayerShip;
+class Player;
 class AnimEntity;
 class bullet;
 class Enemy;
@@ -76,7 +76,7 @@ protected:
 
 	// Game Entities:
 	// W02.1: Add a PlayerShip field
-	PlayerShip* pPlayerShip;
+	Player* pPlayer;
 	// W02.2: Add an alien enemy container field.
 	std::vector<Enemy*> pEnemyVector;
 	// W02.3: Add a bullet container field.
