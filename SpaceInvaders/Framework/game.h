@@ -10,6 +10,7 @@ class Player;
 class AnimEntity;
 class Enemy;
 class SoundSystem;
+class Coin;
 
 #include "SoundSystem.h"
 #include "InputControls.h"
@@ -40,6 +41,7 @@ public:
 
 	void SpawnEnemy(int direction);
 	void SpawnExplosion(int x, int y);
+	void SpawnCoin(int x, int y);
 
 	void InputRouter(InputControls input);
 
@@ -83,6 +85,7 @@ protected:
 	} y2k;
 
 	// Simulation Counters:
+	float m_elapsedSecondsTotal;
 	float m_elapsedSeconds;
 	float m_lag;
 	float m_executionTime;
@@ -97,10 +100,12 @@ protected:
 	Player* pPlayer;
 	std::vector<Enemy*> pEnemyVector;
 	std::vector<AnimEntity*> pExplosionVector;
+	std::vector<AnimEntity*> pCoinVector;
 	
 	// Vector Iterators
 	std::vector<AnimEntity*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
+	std::vector<AnimEntity*>::iterator itCoin;
 	// FMOD
 	SoundSystem sound;
 

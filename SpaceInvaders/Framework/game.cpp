@@ -10,6 +10,7 @@
 #include "sprite.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "Coin.h"
 #include "texture.h"
 #include "math.h"
 #include "AnimEntity.h"
@@ -23,6 +24,8 @@
 #include <SDL.h>
 #include <vector>
 #include <Windows.h>
+#include <stdio.h>
+#include <sstream>
 #include "fmod.hpp"
 
 // Static Members:
@@ -123,8 +126,7 @@ Game::Initialise()
 	//// Release the sound
 	////sound.releaseSound(soundSample);
 
-
-
+	SpawnCoin(100, 100);
 	return (true);
 }
 
@@ -146,10 +148,10 @@ Game::DoGameLoop()
 		m_executionTime += deltaTime;
 
 		m_lag += deltaTime;
-		// GameState dictactes process and drawn
+		// GameState dictactes process and draw functions
 
 		// Playing State
-		if (m_gameState == 0) {
+		if (m_gameState == m_gameState_e::playing) {
 			while (m_lag >= stepSize)
 			{
 				Process(stepSize);
@@ -159,7 +161,7 @@ Game::DoGameLoop()
 			Draw(*m_pBackBuffer);
 		}
 		// Paused State
-		else if (m_gameState == 1) {
+		else if (m_gameState == m_gameState_e::paused) {
 			while (m_lag >= stepSize)
 			{
 				ProcessPauseState(stepSize);
@@ -169,12 +171,12 @@ Game::DoGameLoop()
 			Draw(*m_pBackBuffer);
 			
 		}
-		// Quit State
-		else if (m_gameState == 2) {
+		// Game Over State
+		else if (m_gameState == m_gameState_e::lost) {
 
 		}
 		// Menu State
-		else if (m_gameState == 3) {
+		else if (m_gameState == m_gameState_e::menu) {
 
 		}
 	}
@@ -190,10 +192,17 @@ Game::Process(float deltaTime)
 	// Count total simulation time elapsed:
 	m_elapsedSeconds += deltaTime;
 	
+	// Spawn Enemy on a timer
 	comparisonTime++;
 	if (0==comparisonTime % 10) {
 		int x = (0 + (rand() % (int)(3 - 0 + 1)));
 		SpawnEnemy(x);
+	}
+
+	if (0 == comparisonTime % 20) {
+		int x = (0 + (rand() % (int)(width - 0 + 1)));
+		int y = (0 + (rand() % (int)(height - 0 + 1)));
+		SpawnCoin(x, y);
 	}
 
 	// Frame Counter:
@@ -216,6 +225,7 @@ Game::Process(float deltaTime)
 		// If collision end game and kill player
 		if (pPlayer->IsCollidingWith(**itEnemy)) {
 			// Damage player and set dead if no hp left
+			pPlayer->damagePlayerCheck(25);
 		}
 		// if out of bounds remove enemy
 		else if (x > width + 20 || x < -20 || y > height + 20
@@ -232,9 +242,33 @@ Game::Process(float deltaTime)
 	// Update player
 	pPlayer->Process(deltaTime);
 
+	// Process Explosions
 	for (int i = 0; i < pExplosionVector.size(); i++)
 	{
 		pExplosionVector[i]->Process(deltaTime);
+	}
+
+	// Process Coins
+	for (int i = 0; i < pCoinVector.size(); i++)
+	{
+		pCoinVector[i]->Process(deltaTime);
+		
+	}
+
+	for (itCoin = pCoinVector.begin(); itCoin < pCoinVector.end();)
+	{
+		AnimEntity* coin = *itCoin;
+		coin->Process(deltaTime);
+		int x = coin->GetPositionX();
+		int y = coin->GetPositionY();
+		// If collision Collect coin and remove it
+		if (pPlayer->IsCollidingWithAnim(**itCoin)) {
+			delete *itCoin;
+			itCoin = pCoinVector.erase(itCoin);
+			SpawnExplosion(x, y);
+		}
+		else
+			itCoin++;
 	}
 
 	// If player is dead set game state to OVER
@@ -275,13 +309,6 @@ Game::ProcessPauseState(float deltaTime)
 		itEnemy++;
 	}
 
-	// Update player
-	pPlayer->Process(deltaTime);
-
-	for (int i = 0; i < pExplosionVector.size(); i++)
-	{
-		pExplosionVector[i]->Process(deltaTime);
-	}
 }
 
 
@@ -297,18 +324,40 @@ Game::Draw(BackBuffer& backBuffer)
 			pEnemyVector[i]->Draw(backBuffer);
 		}
 
+		// Draw Explosions
 		for (int i = 0; i < pExplosionVector.size(); i++) {
 			pExplosionVector[i]->Draw(backBuffer);
 		}
 
-		// W02.1: Draw the player ship...
+		// Draw Coins
+		for (int i = 0; i < pCoinVector.size(); i++) {
+			pCoinVector[i]->Draw(backBuffer);
+		}
+
+		// Draw Player
 		pPlayer->Draw(backBuffer);
 
+		
 
 		// Draw text according to gamestate
+		
+
+		// Score Text Char
+		char time[100];
+		sprintf(time, "%d", int(m_executionTime + 0.5));
+
+		// Health Text Char
+		stringstream s;
+		s << pPlayer->m_hp;
+		string healthString = "Health " + s.str();
+		const char* healthChar = healthString.c_str();
+		
 		SDL_Color colour = { 0, 0, 0, 255 };
-		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "Game Over", 24, 100, 100);
-	
+		// Draw Score Text
+		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", time, 40, width-425, 0);
+		// Draw Health Text
+		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
+		// Draw Coins Text
 
 	backBuffer.Present();
 }
@@ -321,22 +370,27 @@ Game::Quit()
 
 /* Input Methods */
 
+// Routes all the input commands to check
+// State and Input to determine what the player
+// Can or cannot do
 void
 Game::InputRouter(InputControls input) {
 	// Evaluate string input
-	switch (input){
-	case InputControls::pMoveUp:
-		MovePlayerUp();
-		break;
-	case InputControls::pMoveDown:
-		MovePlayerDown();
-		break;
-	case InputControls::pMoveLeft:
-		MovePlayerLeft();
-		break;
-	case InputControls::pMoveRight:
-		MovePlayerRight();
-		break;
+	if (m_gameState == m_gameState_e::playing) {
+		switch (input){
+		case InputControls::pMoveUp:
+			MovePlayerUp();
+			break;
+		case InputControls::pMoveDown:
+			MovePlayerDown();
+			break;
+		case InputControls::pMoveLeft:
+			MovePlayerLeft();
+			break;
+		case InputControls::pMoveRight:
+			MovePlayerRight();
+			break;
+		}
 	}
 }
 
@@ -349,7 +403,6 @@ Game::MovePlayerLeft()
 	pPlayer->SetHorizontalVelocity(-5);
 }
 
-// W02.1: Add the method to tell the player ship to move right...
 void
 Game::MovePlayerRight()
 {
@@ -371,7 +424,7 @@ Game::MovePlayerDown()
 	pPlayer->SetVerticalVelocity(5);
 }
 
-/* Reset movement methods */
+/* Stop movement methods */
 
 void
 Game::StopMovePlayerHorizontal()
@@ -479,6 +532,23 @@ Game::SpawnExplosion(int x, int y)
 
 	// W02.2: Add the new Enemy to the enemy container.
 	pExplosionVector.push_back(e);
+}
+
+void
+Game::SpawnCoin(int x, int y)
+{
+	AnimatedSprite* coinSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\coin.png");
+	AnimEntity* e = new AnimEntity();
+	e->Initialise(coinSprite);
+	coinSprite->SetFrameSpeed(0.1f);
+	coinSprite->SetFrameWidth(50);
+	coinSprite->SetFrameHeight(50);
+	coinSprite->SetNumOfFrames(9);
+	coinSprite->SetLooping(true);
+	e->setX(x);
+	e->setY(y);
+	
+	pCoinVector.push_back(e);
 }
 
 float RandomFloat(float a, float b) {

@@ -6,6 +6,7 @@
 class BackBuffer;
 class Sprite;
 class AnimatedSprite;
+class AnimEntity;
 
 class Entity
 {
@@ -26,6 +27,7 @@ public:
 	bool IsDead() const;
 
 	bool IsCollidingWith(Entity& e);
+	bool IsCollidingWithAnim(AnimEntity& e);
 
 	float GetPositionX();
 	float GetPositionY();
@@ -36,7 +38,7 @@ public:
 	void setAnimY(int y);
 
 	float GetHorizontalVelocity();
-	void SetHorizontalVelocity(float x); 
+	void SetHorizontalVelocity(float x);
 
 	float GetVerticalVelocity();
 	void SetVerticalVelocity(float y);

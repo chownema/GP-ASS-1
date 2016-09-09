@@ -6,7 +6,7 @@ using namespace std;
 
 Player::Player()
 {
-
+	m_hp = 100;
 };
 
 
@@ -18,14 +18,13 @@ Player::~Player()
 bool
 Player::damagePlayerCheck(int damage)
 {
-	//// Damage player
-	//m_hp - damage;
-	//// Check if dead
-	//if (this->m_hp <= 0) {
-	//	this->SetDead(true);
-	//}
-	//return this->IsDead();
-	return true;
+	// Damage player
+	m_hp -= damage;
+	// Check if dead
+	if (this->m_hp <= 0) {
+		this->SetDead(true);
+	}
+	return m_dead;
 }
 
 void
