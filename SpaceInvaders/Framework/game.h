@@ -11,6 +11,7 @@ class AnimEntity;
 class Enemy;
 class SoundSystem;
 class Coin;
+class Parser;
 
 #include "SoundSystem.h"
 #include "InputControls.h"
@@ -97,16 +98,15 @@ protected:
 	int m_gameState = playing; // set init value for start of game
 
 	// Game Entities:
-	Player* pPlayer;
-	AnimEntity* pAnimPlayer;
+	Player* pAnimPlayer;
 	std::vector<Enemy*> pEnemyVector;
 	std::vector<AnimEntity*> pExplosionVector;
-	std::vector<AnimEntity*> pCoinVector;
+	std::vector<Coin*> pCoinVector;
 	
 	// Vector Iterators
 	std::vector<AnimEntity*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
-	std::vector<AnimEntity*>::iterator itCoin;
+	std::vector<Coin*>::iterator itCoin;
 	// FMOD
 	SoundSystem sound;
 

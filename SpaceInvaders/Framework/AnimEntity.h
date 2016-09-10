@@ -4,6 +4,7 @@
 // Forward Declarations:
 class BackBuffer;
 class AnimatedSprite;
+class Entity;
 
 class AnimEntity
 {
@@ -27,7 +28,8 @@ public:
 	float GetHorizontalVelocity();
 	void SetHorizontalVelocity(float x);
 
-	bool IsCollidingWith(AnimEntity& e);
+	bool IsCollidingWith(Entity& e);
+	bool IsCollidingWithAnim(AnimEntity& e);
 
 	float GetVerticalVelocity();
 	void SetVerticalVelocity(float y);

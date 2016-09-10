@@ -8,7 +8,11 @@ public:
 	Coin();
 	~Coin();
 	void setValue(int value);
-	void processExistence(int deltaTime);
+	void setTimeBorn(float value);
+	void setLifeSpan(float lifeSpan);
+	void processExistence(float deltaTime);
+
+	
 
 	// class members
 public:

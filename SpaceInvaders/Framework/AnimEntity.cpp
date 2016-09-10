@@ -3,6 +3,7 @@
 #include "animatedsprite.h"
 #include "backbuffer.h"
 #include "logmanager.h"
+#include "entity.h"
 
 
 // Library includes:
@@ -58,9 +59,8 @@ AnimEntity::Draw(BackBuffer& backBuffer)
 }
 
 bool
-AnimEntity::IsCollidingWith(AnimEntity& e)
+AnimEntity::IsCollidingWith(Entity& e)
 {
-
 	// this entity
 	float x1 = GetPositionX();
 	float y1 = GetPositionY();
@@ -68,39 +68,40 @@ AnimEntity::IsCollidingWith(AnimEntity& e)
 	// the param entity
 	float x2 = e.GetPositionX();
 	float y2 = e.GetPositionY();
-	bool collide = false;
-	int r = 1;
-	float r1f = static_cast<int>(r);
-	float r2f = static_cast<int>(r);
 
-
-	//float collision = r1f + r2f;
-	float collision = 10;
+	float collision = 15;
 	// W02.3: Generic Entity Collision routine.
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
-
-	char buffer[256];
-	sprintf(buffer, "%f", actualdistance);
-	//LogManager::GetInstance().Log(buffer);
-
-	// W02.3: Does this object collide with the e object?
 	if (actualdistance < collision)
 	{
-		collide = true;
+		return true;
 	}
-	// W02.3: Create a circle for each entity (this and e).
+	return (false);
+}
 
-	// W02.3: Check for intersection.
-	// W02.3: Using circle-vs-circle collision detection.
 
-	// W02.3: Return result of collision.
-	if (collide == true)
+bool
+AnimEntity::IsCollidingWithAnim(AnimEntity& e)
+{
+	// This entity
+	float x1 = GetPositionX();
+	float y1 = GetPositionY();
+
+	// The param entity
+	float x2 = e.GetPositionX();
+	float y2 = e.GetPositionY();
+	bool collide = false;
+
+	// Distance Collision Variable
+	float collision = 30;
+	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
+
+	// If hit
+	if (actualdistance < collision)
 	{
-		return(collide);
+		return true;
 	}
-
-	return (false); // W02.4 Change return value!
-
+	return (false);
 }
 
 void

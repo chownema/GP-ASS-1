@@ -1,11 +1,13 @@
 #include <iostream>
 #include "Coin.h"
+#include "AnimatedSprite.h"
 
 using namespace std;
 
 Coin::Coin()
 {
 	timeIsUp = false;
+	lifeSpan = 0.1;
 };
 
 
@@ -21,15 +23,25 @@ Coin::setValue(int val)
 }
 
 void
-Coin::processExistence(int time)
+Coin::setTimeBorn(float val)
 {
-	// Take current time
-	// Compare time to life span
+	timeBorn = val;
+}
+
+void
+Coin::setLifeSpan(float val)
+{
+	lifeSpan = val;
+}
+
+void
+Coin::processExistence(float time)
+{
+	// Speed up coin over its existence
+	m_pAnimSprite->SetFrameSpeed(m_pAnimSprite->GetFrameSpeed() - 0.005);
+	// Take current time compare time to life span
 	if ((time - timeBorn) > lifeSpan) {
-		// Animate out
-		
-		// Set Time is up true
+		// Set Time is up true to animate out and remove from container
 		timeIsUp = true;
 	}
-	
 }

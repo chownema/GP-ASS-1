@@ -36,8 +36,6 @@ const int height = 600;
 int playerSpeed = 5;
 int comparisonTime = 0;
 
-int hitCount = 0;
-
 Game&
 Game::GetInstance()
 {
@@ -106,7 +104,7 @@ Game::Initialise()
 	playerSpeed = playerJson["speed"].GetInt();
 	// Set player data on player object
 	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\playermed.png");
-	pAnimPlayer = new AnimEntity();
+	pAnimPlayer = new Player();
 	pAnimPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
 	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
@@ -115,16 +113,6 @@ Game::Initialise()
 	playerSprite->SetLooping(playerJson["looping"].GetBool());
 	pAnimPlayer->setX(width / 2);
 	pAnimPlayer->setY(height / 2);
-
-
-	//Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite(SPRITE_LOC.c_str());
-	//assert(pPlayerSprite);
-	//// W02.1: Create the player ship instance.
-	//pPlayer = new Player();
-	//pPlayer->Initialise(pPlayerSprite);
-	//pPlayer->setX(width / 2);
-	//pPlayer->setY(height / 2);
-	//pPlayer->setHitPoints(HEALTH);
 	
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
@@ -137,7 +125,7 @@ Game::Initialise()
 	//sound.playSound(soundSample, true);
 
 	//// Do something meanwhile...
-
+	
 	//// Release the sound
 	////sound.releaseSound(soundSample);
 
@@ -237,19 +225,20 @@ Game::Process(float deltaTime)
 		ene->Process(deltaTime);
 		int x = ene->GetPositionX();
 		int y = ene->GetPositionY();
-		//// If collision end game and kill player
-		//if (ene->IsCollidingWith(pAnimPlayer)) {
-		//	// Damage player and set dead if no hp left
-		//	pPlayer->damagePlayerCheck(25);
-		//}
-		//// if out of bounds remove enemy
-		//else 
+		// If collision end game and kill player
+		if (ene->IsCollidingWithAnim(*pAnimPlayer)) {
+			// Damage player and set dead if no hp left
+			pAnimPlayer->damagePlayerCheck(25);
+			// Create animation hit effect
+			SpawnExplosion(x, y);
+		}
+		// if out of bounds remove enemy
+		else 
 		if (x > width + 20 || x < -20 || y > height + 20
 			|| y < -20) {
 				delete *itEnemy;
 				itEnemy = pEnemyVector.erase(itEnemy);
 				SpawnExplosion(x, y);
-				hitCount++;
 		}
 		else
 			itEnemy++;
@@ -266,25 +255,21 @@ Game::Process(float deltaTime)
 	}
 
 	// Process Coins
-	for (int i = 0; i < pCoinVector.size(); i++)
-	{
-		pCoinVector[i]->Process(deltaTime);
-		
-	}
-
 	for (itCoin = pCoinVector.begin(); itCoin < pCoinVector.end();)
 	{
-		AnimEntity* coin = *itCoin;
+		Coin* coin = *itCoin;
 		coin->Process(deltaTime);
+		coin->processExistence(m_executionTime + 0.5);
+		
 		int x = coin->GetPositionX();
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
-		//if (pPlayer->IsCollidingWithAnim(**itCoin)) {
-		//	delete *itCoin;
-		//	itCoin = pCoinVector.erase(itCoin);
-		//	SpawnExplosion(x, y);
-		//}
-		//else
+		if (pAnimPlayer->IsCollidingWithAnim(**itCoin)) {
+			delete *itCoin;
+			itCoin = pCoinVector.erase(itCoin);
+			SpawnExplosion(x, y);
+		}
+		else
 			itCoin++;
 	}
 
@@ -335,48 +320,54 @@ Game::Draw(BackBuffer& backBuffer)
 	++m_frameCount;
 
 	backBuffer.Clear();
-	
-	// W02.2: Draw all enemy aliens in container...
-		for (int i = 0; i < pEnemyVector.size(); i++) {
-			pEnemyVector[i]->Draw(backBuffer);
-		}
 
-		// Draw Explosions
-		for (int i = 0; i < pExplosionVector.size(); i++) {
-			pExplosionVector[i]->Draw(backBuffer);
-		}
+	// Draw enemies
+	for (int i = 0; i < pEnemyVector.size(); i++) {
+		pEnemyVector[i]->Draw(backBuffer);
+	}
 
-		// Draw Coins
-		for (int i = 0; i < pCoinVector.size(); i++) {
-			pCoinVector[i]->Draw(backBuffer);
-		}
+	// Draw Explosions
+	for (int i = 0; i < pExplosionVector.size(); i++) {
+		pExplosionVector[i]->Draw(backBuffer);
+	}
 
-		// Draw Player
-		//pPlayer->Draw(backBuffer);
-		pAnimPlayer->Draw(backBuffer);
+	// Draw Coins
+	for (int i = 0; i < pCoinVector.size(); i++) {
+		pCoinVector[i]->Draw(backBuffer);
+	}
+
+	// Draw Player
+	pAnimPlayer->Draw(backBuffer);
 
 		
 
-		// Draw text according to gamestate
+	/* Draw text according to gamestate */
 		
 
-		// Score Text Char
-		char time[100];
-		sprintf(time, "%d", int(m_executionTime + 0.5));
+	// Score Text Char
+	char time[100];
+	sprintf(time, "%d", int(m_executionTime + 0.5));
 
-		// Health Text Char
-		stringstream s;
-		//s << pPlayer->m_hp;
-		s << 100;
-		string healthString = "Health " + s.str();
-		const char* healthChar = healthString.c_str();
+	// Health Text Char
+	stringstream s;
+	s << pAnimPlayer->m_hp;
+	string healthString = "Health " + s.str();
+	const char* healthChar = healthString.c_str();
+
+	// Coin Text Char
+	s << m_frameCount;
+	string coinString = "FPS " + s.str();
+	const char* coinChar = coinString.c_str();
 		
-		SDL_Color colour = { 0, 0, 0, 255 };
-		// Draw Score Text
-		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", time, 40, width-425, 0);
-		// Draw Health Text
-		m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
-		// Draw Coins Text
+	SDL_Color colour = { 0, 0, 0, 255 };
+	// Draw Score Text
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", time, 40, width-425, 0);
+	// Draw Health Text
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
+	// Draw Coins Text
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 200, 0);
+	// Draw FPS
+	//m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 800, 0);
 
 	backBuffer.Present();
 }
@@ -418,32 +409,24 @@ Game::InputRouter(InputControls input) {
 void 
 Game::MovePlayerLeft()
 {
-	// W02.1: Tell the player ship to move left.
-	//pPlayer->SetHorizontalVelocity(-playerSpeed);
 	pAnimPlayer->SetHorizontalVelocity(-playerSpeed);
 }
 
 void
 Game::MovePlayerRight()
 {
-	// W02.1: Tell the player ship to move Right.
-	//pPlayer->SetHorizontalVelocity(playerSpeed);
 	pAnimPlayer->SetHorizontalVelocity(playerSpeed);
 }
 
 void
 Game::MovePlayerUp()
 {
-	// W02.1: Tell the player ship to move Right.
-	//pPlayer->SetVerticalVelocity(-playerSpeed);
 	pAnimPlayer->SetVerticalVelocity(-playerSpeed);
 }
 
 void
 Game::MovePlayerDown()
 {
-	// W02.1: Tell the player ship to move Right.
-	//pPlayer->SetVerticalVelocity(playerSpeed);
 	pAnimPlayer->SetVerticalVelocity(playerSpeed);
 }
 
@@ -452,7 +435,6 @@ Game::MovePlayerDown()
 void
 Game::StopMovePlayerHorizontal()
 {
-	// W02.1: Tell the player ship to move left.
 	pAnimPlayer->SetHorizontalVelocity(0);
 
 }
@@ -460,7 +442,6 @@ Game::StopMovePlayerHorizontal()
 void
 Game::StopMovePlayerVertical()
 {
-	// W02.1: Tell the player ship to move Right.
 	pAnimPlayer->SetVerticalVelocity(0);
 }
 
@@ -563,13 +544,16 @@ void
 Game::SpawnCoin(int x, int y)
 {
 	AnimatedSprite* coinSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\coin.png");
-	AnimEntity* e = new AnimEntity();
+	Coin* e = new Coin();
+	e->setLifeSpan(5.0);
+	e->setTimeBorn(m_executionTime + 0.5);
 	e->Initialise(coinSprite);
-	coinSprite->SetFrameSpeed(0.1f);
+	coinSprite->SetFrameSpeed(0.5f);
 	coinSprite->SetFrameWidth(50);
 	coinSprite->SetFrameHeight(50);
 	coinSprite->SetNumOfFrames(9);
 	coinSprite->SetLooping(true);
+
 	e->setX(x);
 	e->setY(y);
 	

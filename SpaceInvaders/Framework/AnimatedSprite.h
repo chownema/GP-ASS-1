@@ -31,6 +31,7 @@ public:
 	int GetFrameWidth();
 	int GetCurrentFrame();
 	int GetNumOfFrames();
+	float GetFrameSpeed();
 
 	void Pause();
 	bool IsPaused();

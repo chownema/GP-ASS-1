@@ -170,8 +170,15 @@ AnimatedSprite::GetFrameWidth()
 {
 	return m_frameWidth;
 }
+
 int
 AnimatedSprite::GetCurrentFrame()
 {
 	return m_currentFrame;
+}
+
+float
+AnimatedSprite::GetFrameSpeed()
+{
+	return m_frameSpeed;
 }
