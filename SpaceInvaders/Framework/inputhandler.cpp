@@ -76,7 +76,9 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_SPACE) {
 				// no shooting only peaceful cat
 				game.PauseGame();
-
+			}
+			if (e.key.keysym.sym == SDL_SCANCODE_Z) {
+				select = true;
 			}
 		}
 		else if (e.type == SDL_KEYUP) {
@@ -95,6 +97,9 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_DOWN) {
 				moveDown = false;
 				game.StopMovePlayerVertical();
+			}
+			if (e.key.keysym.sym == SDL_SCANCODE_Z) {
+				select = false;
 			}
 		}
 
@@ -121,6 +126,10 @@ InputHandler::ProcessInput(Game& game)
 		{
 			//game.MovePlayerRight();
 			game.InputRouter(InputControls::pMoveRight);
+		}
+		if (select)
+		{
+			game.InputRouter(InputControls::mSelect);
 		}
 
 

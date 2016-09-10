@@ -30,6 +30,7 @@ public:
 	bool moveDown;
 	bool moveLeft; 
 	bool moveRight;
+	bool select;
 
 protected:
 	SDL_Joystick* m_pGameController;

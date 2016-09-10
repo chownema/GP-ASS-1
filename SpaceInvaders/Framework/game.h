@@ -65,6 +65,7 @@ protected:
 	void DrawGameOverState(BackBuffer& backBuffer);
 	
 	void resumeInit();
+	void StartGame();
 
 private:
 	Game(const Game& game);

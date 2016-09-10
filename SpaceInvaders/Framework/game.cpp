@@ -120,19 +120,32 @@ Game::Initialise()
 	pAnimPlayer->setY(height / 2);
 
 	
-
+	// Play button
 	const Value& mItemJson = Parser::GetInstance().document["menu_item"];
-	AnimatedSprite* mItemSprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
+	AnimatedSprite* mItemASprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
 	pItemA = new MenuItem();
-	pItemA->Initialise(mItemSprite);
-	mItemSprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
-	mItemSprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
-	mItemSprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
-	mItemSprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
-	mItemSprite->SetLooping(mItemJson["looping"].GetBool());
+	pItemA->Initialise(mItemASprite);
+	mItemASprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
+	mItemASprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
+	mItemASprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
+	mItemASprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
+	mItemASprite->SetLooping(mItemJson["looping"].GetBool());
 	pItemA->setName("play");
 	pItemA->setX(width-(width*0.982));
 	pItemA->setY(height - (height*0.4));
+	
+	// Exit button
+	AnimatedSprite* mItemBSprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
+	pItemB = new MenuItem();
+	pItemB->Initialise(mItemBSprite);
+	mItemBSprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
+	mItemBSprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
+	mItemBSprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
+	mItemBSprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
+	mItemBSprite->SetLooping(mItemJson["looping"].GetBool());
+	pItemB->setName("exit");
+	pItemB->setX(width - (width*0.4));
+	pItemB->setY(height - (height*0.4));
 
 
 	m_lastTime = SDL_GetTicks();
@@ -227,6 +240,12 @@ Game::ProcessMenuState(float deltaTime)
 		pItemA->setActiveStatus(true);
 	else
 		pItemA->setActiveStatus(false);
+
+	pItemB->Process(deltaTime);
+	if (pItemB->IsCollidingWithAnim(*pAnimPlayer))
+		pItemB->setActiveStatus(true);
+	else
+		pItemB->setActiveStatus(false);
 }
 
 void 
@@ -244,15 +263,22 @@ Game::DrawMenuState(BackBuffer& backBuffer)
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
 
-	// Draw character to check
-	pAnimPlayer->Draw(backBuffer);
+
 
 	// Draw selector around Play
 	if (pItemA->getActiveStatus())
 		pItemA->Draw(backBuffer);
+	// Draw selector around Exit
+	else if(pItemB->getActiveStatus())
+		pItemB->Draw(backBuffer);
+
+	// Draw character to check
+	pAnimPlayer->Draw(backBuffer);
 
 	backBuffer.Present();
 }
+
+/* Playing state process and draw */
 
 void 
 Game::Process(float deltaTime)
@@ -477,6 +503,12 @@ Game::InputRouter(InputControls input) {
 		case InputControls::pMoveRight:
 			MovePlayerRight();
 			break;
+		case InputControls::mSelect:
+			if (pItemA->getActiveStatus())
+				StartGame();
+			else if (pItemB->getActiveStatus())
+				Quit();
+			break;
 		}
 	}
 }
@@ -540,6 +572,11 @@ Game::PauseGame()
 		m_gameState = playing;
 		resumeInit();
 	}	
+}
+
+void
+Game::StartGame() {
+	m_gameState = playing;
 }
 
 // W02.2: Spawn a Enemy in game.
