@@ -46,16 +46,5 @@ Parser::loadInFile(string file)
 	// Set the document with the data in the input stream
 	document.ParseStream(is);
 	fclose(fp);
-
-	//// Open the file for reading
-	//FILE* fp = fopen(coinFile, "rb"); // non-Windows use "r"
-	//char readBuffer[65536];
-	//FileReadStream is(fp, readBuffer, sizeof(readBuffer));
-	//// Set the document with the data in the input stream
-	//enemyDoc.ParseStream(is);
-	//fclose(fp);
-	// Set data to members of the parser class
-	//string value = d["hello"].GetString();
-
 }
 

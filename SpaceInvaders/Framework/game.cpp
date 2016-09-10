@@ -99,11 +99,10 @@ Game::Initialise()
 
 	// Load player data
 	const Value& playerJson = Parser::GetInstance().document["player"];
-	string SPRITE_LOC = playerJson["sprite_loc"].GetString();
 	int HEALTH = playerJson["health"].GetInt();
 	playerSpeed = playerJson["speed"].GetInt();
 	// Set player data on player object
-	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\playermed.png");
+	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite(playerJson["sprite_loc"].GetString());
 	pAnimPlayer = new Player();
 	pAnimPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
@@ -543,16 +542,17 @@ Game::SpawnExplosion(int x, int y)
 void
 Game::SpawnCoin(int x, int y)
 {
-	AnimatedSprite* coinSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\coin.png");
+	const Value& coinJson = Parser::GetInstance().document["coin"];
+	AnimatedSprite* coinSprite = m_pBackBuffer->CreateAnimatedSprite(coinJson["sprite_loc"].GetString());
 	Coin* e = new Coin();
-	e->setLifeSpan(5.0);
+	e->setLifeSpan(coinJson["life_span"].GetFloat());
 	e->setTimeBorn(m_executionTime + 0.5);
 	e->Initialise(coinSprite);
-	coinSprite->SetFrameSpeed(0.5f);
-	coinSprite->SetFrameWidth(50);
-	coinSprite->SetFrameHeight(50);
-	coinSprite->SetNumOfFrames(9);
-	coinSprite->SetLooping(true);
+	coinSprite->SetFrameSpeed(coinJson["frame_speed"].GetFloat());
+	coinSprite->SetFrameWidth(coinJson["frame_width"].GetInt());
+	coinSprite->SetFrameHeight(coinJson["frame_height"].GetInt());
+	coinSprite->SetNumOfFrames(coinJson["num_frames"].GetInt());
+	coinSprite->SetLooping(coinJson["looping"].GetBool());
 
 	e->setX(x);
 	e->setY(y);

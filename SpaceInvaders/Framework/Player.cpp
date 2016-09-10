@@ -32,3 +32,9 @@ Player::setHitPoints(int hitPoints)
 {
 	m_hp = hitPoints;
 }
+
+void
+Player::setCoins(int coins)
+{
+	m_coins = coins;
+}

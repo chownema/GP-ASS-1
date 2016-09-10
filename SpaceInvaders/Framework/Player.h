@@ -9,7 +9,8 @@ public:
 	~Player();
 	bool damagePlayerCheck(int damage);
 	void setHitPoints(int hp);
-
+	void setCoins(int coin);
+	
 // Class members
 public:
 	int m_hp;
