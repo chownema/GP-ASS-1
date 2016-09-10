@@ -14,6 +14,7 @@ AnimatedSprite::AnimatedSprite()
 	, m_paused(false)
 	, m_loop(false)
 	, m_animating(false)
+	, yDrawPos(0)
 {
 
 }
@@ -89,6 +90,18 @@ AnimatedSprite::Draw(BackBuffer& backbuffer)
 	//          What is the frame width?
 	//SetFrameWidth(320);
 	// Set frame height
+}
+
+void 
+AnimatedSprite::SetYDrawPos(int y)
+{
+	yDrawPos = y;
+}
+
+int
+AnimatedSprite::getYDrawPos()
+{
+	return (yDrawPos);
 }
 
 void

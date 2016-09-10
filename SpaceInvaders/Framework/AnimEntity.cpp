@@ -132,6 +132,12 @@ AnimEntity::GetPositionY()
 	return (m_y);
 }
 
+AnimatedSprite* 
+AnimEntity::getAnimSprite() {
+
+	return (m_pAnimSprite);
+}
+
 void
 AnimEntity::setX(int x)
 {
@@ -146,6 +152,17 @@ AnimEntity::setY(int y)
 	m_pAnimSprite->SetY(y);
 }
 
+void
+AnimEntity::setDirection(string direction)
+{
+	m_direction = direction;
+}
+
+string
+AnimEntity::getDirection()
+{
+	return (m_direction);
+}
 
 float
 AnimEntity::GetHorizontalVelocity()

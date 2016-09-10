@@ -170,7 +170,7 @@ BackBuffer::DrawAnimatedSprite(AnimatedSprite& sprite)
 	dest.h = sprite.GetFrameHeight();
 
 	source.x = (sprite.GetCurrentFrame() * sprite.GetFrameWidth());
-	source.y = 0;
+	source.y = sprite.getYDrawPos();
 	source.w = sprite.GetFrameWidth();
 	source.h = sprite.GetFrameHeight();
 

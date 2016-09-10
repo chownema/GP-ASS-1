@@ -6,6 +6,8 @@ class BackBuffer;
 class AnimatedSprite;
 class Entity;
 
+#include <string>
+
 class AnimEntity
 {
 public:
@@ -21,6 +23,11 @@ public:
 
 	float GetPositionX();
 	float GetPositionY();
+
+	void setDirection(std::string direction);
+	std::string getDirection();
+
+	AnimatedSprite* getAnimSprite();
 
 	void setX(int x);
 	void setY(int y);
@@ -43,6 +50,8 @@ protected:
 	float m_velocityY;
 
 	bool m_dead;
+
+	std::string m_direction;
 
 };
 #endif // __ANINENTITY_H__

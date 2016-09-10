@@ -111,6 +111,7 @@ Game::Initialise()
 	pAnimPlayer->setCoins(0);
 	pAnimPlayer->setHitPoints(100);
 	pAnimPlayer->Initialise(playerSprite);
+	pAnimPlayer->setDirection("left");
 	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
 	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
 	playerSprite->SetFrameHeight(playerJson["frame_height"].GetInt());
@@ -262,8 +263,6 @@ Game::DrawMenuState(BackBuffer& backBuffer)
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", "MENU", mainHeaderSize, width - (width*0.68), 0);
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
-
-
 
 	// Draw selector around Play
 	if (pItemA->getActiveStatus())
@@ -499,9 +498,13 @@ Game::InputRouter(InputControls input) {
 			break;
 		case InputControls::pMoveLeft:
 			MovePlayerLeft();
+			// Change orientation of sprite
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(0);
 			break;
 		case InputControls::pMoveRight:
 			MovePlayerRight();
+			// Change orientation of sprite
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight());
 			break;
 		case InputControls::mSelect:
 			if (pItemA->getActiveStatus())

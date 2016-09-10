@@ -26,12 +26,14 @@ public:
 	void SetFrameWidth(int w);
 	void SetFrameHeight(int h);
 	void SetNumOfFrames(int f);
+	void SetYDrawPos(int y);
 
 	int GetFrameHeight();
 	int GetFrameWidth();
 	int GetCurrentFrame();
 	int GetNumOfFrames();
 	float GetFrameSpeed();
+	int getYDrawPos();
 
 	void Pause();
 	bool IsPaused();
@@ -57,6 +59,7 @@ protected:
 	float m_frameSpeed;
 	int m_frameWidth;
 	int m_frameHeight;
+	int yDrawPos;
 
 	float m_timeElapsed;
 	int m_currentFrame;
