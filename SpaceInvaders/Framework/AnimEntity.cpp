@@ -43,22 +43,11 @@ AnimEntity::Process(float deltaTime)
 {
 	m_pAnimSprite->Process(deltaTime);
 
-	//m_pAnimSprite->SetX(static_cast<int>(m_x));
-	//m_pAnimSprite->SetY(static_cast<int>(m_y));
+	m_pAnimSprite->SetX(static_cast<int>(m_x));
+	m_pAnimSprite->SetY(static_cast<int>(m_y));
 
-	//// W02.1: Generic position update, based upon velocity (and time).
-	//m_x += m_velocityX;
-	//m_y += m_velocityY;
-
-	//// W02.1: Boundary checking and position capping.
-	//if (m_x > width - 32) {
-	//	m_x = width - 32;
-	//	m_velocityX = 0;
-	//}
-	//else if (m_x < 0) {
-	//	m_x = 0;
-
-	//}
+	m_x += m_velocityX;
+	m_y += m_velocityY;
 }
 
 void
@@ -71,7 +60,6 @@ AnimEntity::Draw(BackBuffer& backBuffer)
 bool
 AnimEntity::IsCollidingWith(AnimEntity& e)
 {
-
 
 	// this entity
 	float x1 = GetPositionX();

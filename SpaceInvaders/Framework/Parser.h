@@ -24,7 +24,7 @@ private:
 
 	//Member Data:
 public:
-	Document enemyDoc;
+	Document document;
 protected:
 	static Parser* sm_pInstance;
 

@@ -132,7 +132,7 @@ Entity::IsCollidingWithAnim(AnimEntity& e)
 	bool collide = false;
 
 	// Distance Collision Variable
-	float collision = 20;
+	float collision = 30;
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 
 	// If hit

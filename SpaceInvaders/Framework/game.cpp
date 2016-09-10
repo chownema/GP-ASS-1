@@ -33,7 +33,7 @@ Game* Game::sm_pInstance = 0;
 TextureManager* texture = 0;
 const int width = 800;
 const int height = 600;
-int bulletSpeed = 5;
+int playerSpeed = 5;
 int comparisonTime = 0;
 
 int hitCount = 0;
@@ -99,17 +99,32 @@ Game::Initialise()
 		return (false);
 	}
 
-	// Set enemy variables
-	int MAX_SPEED = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
-	int MIN_SPEED = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
-	string SPRITE_LOC = Parser::GetInstance().enemyDoc["sprite_loc"].GetString();
-	Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite("assets\\playership.png");
-	assert(pPlayerSprite);
-	// W02.1: Create the player ship instance.
-	pPlayer = new Player();
-	pPlayer->Initialise(pPlayerSprite);
-	pPlayer->setX(width / 2);
-	pPlayer->setY(height / 2);
+	// Load player data
+	const Value& playerJson = Parser::GetInstance().document["player"];
+	string SPRITE_LOC = playerJson["sprite_loc"].GetString();
+	int HEALTH = playerJson["health"].GetInt();
+	playerSpeed = playerJson["speed"].GetInt();
+	// Set player data on player object
+	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\playermed.png");
+	pAnimPlayer = new AnimEntity();
+	pAnimPlayer->Initialise(playerSprite);
+	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
+	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
+	playerSprite->SetFrameHeight(playerJson["frame_height"].GetInt());
+	playerSprite->SetNumOfFrames(playerJson["num_frames"].GetInt());
+	playerSprite->SetLooping(playerJson["looping"].GetBool());
+	pAnimPlayer->setX(width / 2);
+	pAnimPlayer->setY(height / 2);
+
+
+	//Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite(SPRITE_LOC.c_str());
+	//assert(pPlayerSprite);
+	//// W02.1: Create the player ship instance.
+	//pPlayer = new Player();
+	//pPlayer->Initialise(pPlayerSprite);
+	//pPlayer->setX(width / 2);
+	//pPlayer->setY(height / 2);
+	//pPlayer->setHitPoints(HEALTH);
 	
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
@@ -126,7 +141,6 @@ Game::Initialise()
 	//// Release the sound
 	////sound.releaseSound(soundSample);
 
-	SpawnCoin(100, 100);
 	return (true);
 }
 
@@ -199,7 +213,8 @@ Game::Process(float deltaTime)
 		SpawnEnemy(x);
 	}
 
-	if (0 == comparisonTime % 20) {
+	// Spawn Coins on a timer
+	if (0 == comparisonTime % 100) {
 		int x = (0 + (rand() % (int)(width - 0 + 1)));
 		int y = (0 + (rand() % (int)(height - 0 + 1)));
 		SpawnCoin(x, y);
@@ -222,13 +237,14 @@ Game::Process(float deltaTime)
 		ene->Process(deltaTime);
 		int x = ene->GetPositionX();
 		int y = ene->GetPositionY();
-		// If collision end game and kill player
-		if (pPlayer->IsCollidingWith(**itEnemy)) {
-			// Damage player and set dead if no hp left
-			pPlayer->damagePlayerCheck(25);
-		}
-		// if out of bounds remove enemy
-		else if (x > width + 20 || x < -20 || y > height + 20
+		//// If collision end game and kill player
+		//if (ene->IsCollidingWith(pAnimPlayer)) {
+		//	// Damage player and set dead if no hp left
+		//	pPlayer->damagePlayerCheck(25);
+		//}
+		//// if out of bounds remove enemy
+		//else 
+		if (x > width + 20 || x < -20 || y > height + 20
 			|| y < -20) {
 				delete *itEnemy;
 				itEnemy = pEnemyVector.erase(itEnemy);
@@ -240,7 +256,8 @@ Game::Process(float deltaTime)
 	}
 	
 	// Update player
-	pPlayer->Process(deltaTime);
+	//pPlayer->Process(deltaTime);
+	pAnimPlayer->Process(deltaTime);
 
 	// Process Explosions
 	for (int i = 0; i < pExplosionVector.size(); i++)
@@ -262,12 +279,12 @@ Game::Process(float deltaTime)
 		int x = coin->GetPositionX();
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
-		if (pPlayer->IsCollidingWithAnim(**itCoin)) {
-			delete *itCoin;
-			itCoin = pCoinVector.erase(itCoin);
-			SpawnExplosion(x, y);
-		}
-		else
+		//if (pPlayer->IsCollidingWithAnim(**itCoin)) {
+		//	delete *itCoin;
+		//	itCoin = pCoinVector.erase(itCoin);
+		//	SpawnExplosion(x, y);
+		//}
+		//else
 			itCoin++;
 	}
 
@@ -335,7 +352,8 @@ Game::Draw(BackBuffer& backBuffer)
 		}
 
 		// Draw Player
-		pPlayer->Draw(backBuffer);
+		//pPlayer->Draw(backBuffer);
+		pAnimPlayer->Draw(backBuffer);
 
 		
 
@@ -348,7 +366,8 @@ Game::Draw(BackBuffer& backBuffer)
 
 		// Health Text Char
 		stringstream s;
-		s << pPlayer->m_hp;
+		//s << pPlayer->m_hp;
+		s << 100;
 		string healthString = "Health " + s.str();
 		const char* healthChar = healthString.c_str();
 		
@@ -400,28 +419,32 @@ void
 Game::MovePlayerLeft()
 {
 	// W02.1: Tell the player ship to move left.
-	pPlayer->SetHorizontalVelocity(-5);
+	//pPlayer->SetHorizontalVelocity(-playerSpeed);
+	pAnimPlayer->SetHorizontalVelocity(-playerSpeed);
 }
 
 void
 Game::MovePlayerRight()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayer->SetHorizontalVelocity(5);
+	//pPlayer->SetHorizontalVelocity(playerSpeed);
+	pAnimPlayer->SetHorizontalVelocity(playerSpeed);
 }
 
 void
 Game::MovePlayerUp()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayer->SetVerticalVelocity(-5);
+	//pPlayer->SetVerticalVelocity(-playerSpeed);
+	pAnimPlayer->SetVerticalVelocity(-playerSpeed);
 }
 
 void
 Game::MovePlayerDown()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayer->SetVerticalVelocity(5);
+	//pPlayer->SetVerticalVelocity(playerSpeed);
+	pAnimPlayer->SetVerticalVelocity(playerSpeed);
 }
 
 /* Stop movement methods */
@@ -430,21 +453,22 @@ void
 Game::StopMovePlayerHorizontal()
 {
 	// W02.1: Tell the player ship to move left.
-	pPlayer->SetHorizontalVelocity(0);
+	pAnimPlayer->SetHorizontalVelocity(0);
+
 }
 
 void
 Game::StopMovePlayerVertical()
 {
 	// W02.1: Tell the player ship to move Right.
-	pPlayer->SetVerticalVelocity(0);
+	pAnimPlayer->SetVerticalVelocity(0);
 }
 
 void
 Game::ResetMovement()
 {
-	pPlayer->SetHorizontalVelocity(0);
-	pPlayer->SetVerticalVelocity(0);
+	pAnimPlayer->SetHorizontalVelocity(0);
+	pAnimPlayer->SetVerticalVelocity(0);
 }
 
 
@@ -467,9 +491,10 @@ Game::SpawnEnemy(int direction)
 	int x = 0;
 	int y = 0;
 	// Set enemy variables
-	int MAX_SPEED = Parser::GetInstance().enemyDoc["max_speed"].GetInt();
-	int MIN_SPEED = Parser::GetInstance().enemyDoc["min_speed"].GetInt();
-	string SPRITE_LOC = Parser::GetInstance().enemyDoc["sprite_loc"].GetString();
+	const Value& enemyJson = Parser::GetInstance().document["enemy"];
+	int MAX_SPEED = enemyJson["max_speed"].GetInt();
+	int MIN_SPEED = enemyJson["min_speed"].GetInt();
+	string SPRITE_LOC = enemyJson["sprite_loc"].GetString();
 	// W02.2: Load the alien enemy sprite file.
 	Sprite* enemySprite = m_pBackBuffer->CreateSprite(SPRITE_LOC.c_str());
 

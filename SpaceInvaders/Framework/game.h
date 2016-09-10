@@ -98,6 +98,7 @@ protected:
 
 	// Game Entities:
 	Player* pPlayer;
+	AnimEntity* pAnimPlayer;
 	std::vector<Enemy*> pEnemyVector;
 	std::vector<AnimEntity*> pExplosionVector;
 	std::vector<AnimEntity*> pCoinVector;
