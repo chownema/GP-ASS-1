@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Coin.h"
+#include "MenuItem.h"
 #include "texture.h"
 #include "math.h"
 #include "AnimEntity.h"
@@ -18,6 +19,7 @@
 #include "SoundSystem.h"
 #include "Parser.h"
 #include "InputControls.h"
+
 
 // Library includes:
 #include <cassert>
@@ -97,6 +99,8 @@ Game::Initialise()
 		return (false);
 	}
 
+	// menu item entities
+
 	// Load player data
 	const Value& playerJson = Parser::GetInstance().document["player"];
 	int HEALTH = playerJson["health"].GetInt();
@@ -114,9 +118,26 @@ Game::Initialise()
 	playerSprite->SetLooping(playerJson["looping"].GetBool());
 	pAnimPlayer->setX(width / 2);
 	pAnimPlayer->setY(height / 2);
+
 	
+
+	const Value& mItemJson = Parser::GetInstance().document["menu_item"];
+	AnimatedSprite* mItemSprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
+	pItemA = new MenuItem();
+	pItemA->Initialise(mItemSprite);
+	mItemSprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
+	mItemSprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
+	mItemSprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
+	mItemSprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
+	mItemSprite->SetLooping(mItemJson["looping"].GetBool());
+	pItemA->setName("play");
+	pItemA->setX(width-(width*0.982));
+	pItemA->setY(height - (height*0.4));
+
+
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
+
 
 	//// Create a sample sound
 	//SoundClass soundSample;
@@ -200,6 +221,12 @@ Game::ProcessMenuState(float deltaTime)
 {
 	// Process character to move around the screen
 	pAnimPlayer->Process(deltaTime);
+	
+	pItemA->Process(deltaTime);
+	if (pItemA->IsCollidingWithAnim(*pAnimPlayer))
+		pItemA->setActiveStatus(true);
+	else
+		pItemA->setActiveStatus(false);
 }
 
 void 
@@ -213,12 +240,16 @@ Game::DrawMenuState(BackBuffer& backBuffer)
 	int mainHeaderSize = 200;
 	int textSize = 150;
 	// Draw menu text
-	m_pBackBuffer->DrawTextOnScreen(colour, "Amatic-Bold.ttf", "MENU", mainHeaderSize, width - (width*0.68), 0);
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", "MENU", mainHeaderSize, width - (width*0.68), 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
 
 	// Draw character to check
 	pAnimPlayer->Draw(backBuffer);
+
+	// Draw selector around Play
+	if (pItemA->getActiveStatus())
+		pItemA->Draw(backBuffer);
 
 	backBuffer.Present();
 }
@@ -297,11 +328,10 @@ Game::Process(float deltaTime)
 		Coin* coin = *itCoin;
 		coin->Process(deltaTime);
 		coin->processExistence(m_executionTime + 0.5);
-		
 		int x = coin->GetPositionX();
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
-		if (pAnimPlayer->IsCollidingWithAnim(**itCoin)) {
+		if (pAnimPlayer->IsCollidingWithAnim(**itCoin) || coin->IsDead()) {
 			pAnimPlayer->incrementCoins(1);
 			delete *itCoin;
 			itCoin = pCoinVector.erase(itCoin);
@@ -408,13 +438,13 @@ Game::Draw(BackBuffer& backBuffer)
 		
 	SDL_Color colour = { 0, 0, 0, 255 };
 	// Draw Score Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", time, 40, width-425, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", time, 40, width-425, 0);
 	// Draw Health Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
 	// Draw FPS
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
 	// Draw Coins Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
 
 	backBuffer.Present();
 }

@@ -90,6 +90,7 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="InputControls.h" />
     <ClInclude Include="inputhandler.h" />
+    <ClInclude Include="MenuItem.h" />
     <ClInclude Include="logmanager.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Player.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="logmanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MenuItem.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SoundSystem.cpp" />

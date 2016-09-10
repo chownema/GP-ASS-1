@@ -6,7 +6,7 @@ using namespace std;
 
 Coin::Coin()
 {
-	timeIsUp = false;
+	m_dead = false;
 	lifeSpan = 0.1;
 };
 
@@ -42,6 +42,6 @@ Coin::processExistence(float time)
 	// Take current time compare time to life span
 	if ((time - timeBorn) > lifeSpan) {
 		// Set Time is up true to animate out and remove from container
-		timeIsUp = true;
+		m_dead = true;
 	}
 }

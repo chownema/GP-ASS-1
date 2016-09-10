@@ -19,6 +19,5 @@ public:
 	int value;
 	float lifeSpan;
 	float timeBorn;
-	bool timeIsUp;
 };
 #endif

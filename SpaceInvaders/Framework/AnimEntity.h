@@ -17,7 +17,7 @@ public:
 	void Draw(BackBuffer& backBuffer);
 
 	void SetDead(bool dead);
-	bool IsDead() const;
+	bool IsDead();
 
 	float GetPositionX();
 	float GetPositionY();

@@ -12,6 +12,7 @@ class Enemy;
 class SoundSystem;
 class Coin;
 class Parser;
+class MenuItem;
 
 #include "SoundSystem.h"
 #include "InputControls.h"
@@ -99,6 +100,10 @@ protected:
 	int m_numUpdates;
 	bool m_drawDebugInfo;
 	int m_gameState = menu; // set init value for start of game
+
+	// Menu Entities
+	MenuItem* pItemA;
+	MenuItem* pItemB;
 
 	// Game Entities:
 	Player* pAnimPlayer;

@@ -84,16 +84,20 @@ bool
 AnimEntity::IsCollidingWithAnim(AnimEntity& e)
 {
 	// This entity
-	float x1 = GetPositionX();
-	float y1 = GetPositionY();
+	float x1 = GetPositionX()+m_pAnimSprite->GetFrameWidth()/2;
+	float y1 = GetPositionY()+m_pAnimSprite->GetFrameHeight()/2;
 
 	// The param entity
-	float x2 = e.GetPositionX();
-	float y2 = e.GetPositionY();
+	float x2 = e.GetPositionX()+e.m_pAnimSprite->GetFrameWidth() / 2;
+	float y2 = e.GetPositionY()+e.m_pAnimSprite->GetFrameWidth() / 2;
 	bool collide = false;
 
-	// Distance Collision Variable
-	float collision = 30;
+	// Distance Collision Variable 
+	// averaging out height and width of both entities
+	// May be too large for wide entities
+	float collision = ((m_pAnimSprite->GetFrameWidth() / 2) + (m_pAnimSprite->GetFrameHeight() / 2) +
+		(e.m_pAnimSprite->GetFrameWidth() / 2) + (e.m_pAnimSprite->GetFrameHeight() / 2))/2;
+
 	float actualdistance = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
 
 	// If hit
@@ -102,6 +106,12 @@ AnimEntity::IsCollidingWithAnim(AnimEntity& e)
 		return true;
 	}
 	return (false);
+}
+
+bool
+AnimEntity::IsDead()
+{
+	return m_dead;
 }
 
 void
