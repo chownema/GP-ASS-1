@@ -104,6 +104,8 @@ Game::Initialise()
 	// Set player data on player object
 	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite(playerJson["sprite_loc"].GetString());
 	pAnimPlayer = new Player();
+	pAnimPlayer->setCoins(0);
+	pAnimPlayer->setHitPoints(100);
 	pAnimPlayer->Initialise(playerSprite);
 	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
 	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
@@ -178,12 +180,47 @@ Game::DoGameLoop()
 		}
 		// Menu State
 		else if (m_gameState == m_gameState_e::menu) {
-
+			while (m_lag >= stepSize)
+			{
+				ProcessMenuState(stepSize);
+				m_lag -= stepSize;
+				++m_numUpdates;
+			}
+			DrawMenuState(*m_pBackBuffer);
 		}
 	}
 
 	SDL_Delay(1);
 	return (m_looping);
+}
+
+/*Process and Draw For Menu State*/
+void 
+Game::ProcessMenuState(float deltaTime)
+{
+	// Process character to move around the screen
+	pAnimPlayer->Process(deltaTime);
+}
+
+void 
+Game::DrawMenuState(BackBuffer& backBuffer)
+{
+	++m_frameCount;
+
+	backBuffer.Clear();
+
+	SDL_Color colour = { 0, 0, 0, 255 };
+	int mainHeaderSize = 200;
+	int textSize = 150;
+	// Draw menu text
+	m_pBackBuffer->DrawTextOnScreen(colour, "Amatic-Bold.ttf", "MENU", mainHeaderSize, width - (width*0.68), 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
+
+	// Draw character to check
+	pAnimPlayer->Draw(backBuffer);
+
+	backBuffer.Present();
 }
 
 void 
@@ -228,6 +265,7 @@ Game::Process(float deltaTime)
 		if (ene->IsCollidingWithAnim(*pAnimPlayer)) {
 			// Damage player and set dead if no hp left
 			pAnimPlayer->damagePlayerCheck(25);
+			
 			// Create animation hit effect
 			SpawnExplosion(x, y);
 		}
@@ -264,6 +302,7 @@ Game::Process(float deltaTime)
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
 		if (pAnimPlayer->IsCollidingWithAnim(**itCoin)) {
+			pAnimPlayer->incrementCoins(1);
 			delete *itCoin;
 			itCoin = pCoinVector.erase(itCoin);
 			SpawnExplosion(x, y);
@@ -342,31 +381,40 @@ Game::Draw(BackBuffer& backBuffer)
 
 	/* Draw text according to gamestate */
 		
+	
 
 	// Score Text Char
 	char time[100];
 	sprintf(time, "%d", int(m_executionTime + 0.5));
 
-	// Health Text Char
-	stringstream s;
-	s << pAnimPlayer->m_hp;
+	// Health Text Char	
+	s << pAnimPlayer->getHP();
 	string healthString = "Health " + s.str();
+	s.str(""); // Clear stream
 	const char* healthChar = healthString.c_str();
 
-	// Coin Text Char
-	s << m_frameCount;
-	string coinString = "FPS " + s.str();
+	// Coin text Char
+	s << pAnimPlayer->getCoins();
+	string coinString = "Coin " + s.str();
+	s.str(""); // Clear stream
 	const char* coinChar = coinString.c_str();
+
+	// FPS Text Char
+	s << m_FPS;
+	string fpsString = "FPS " + s.str();
+	s.str(""); // Clear stream
+	const char* FPSChar = fpsString.c_str();
+
 		
 	SDL_Color colour = { 0, 0, 0, 255 };
 	// Draw Score Text
 	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", time, 40, width-425, 0);
 	// Draw Health Text
 	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
-	// Draw Coins Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 200, 0);
 	// Draw FPS
-	//m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 800, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
+	// Draw Coins Text
+	m_pBackBuffer->DrawTextOnScreen(colour, "AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
 
 	backBuffer.Present();
 }
@@ -385,7 +433,7 @@ Game::Quit()
 void
 Game::InputRouter(InputControls input) {
 	// Evaluate string input
-	if (m_gameState == m_gameState_e::playing) {
+	if (m_gameState == m_gameState_e::playing || m_gameState == m_gameState_e::menu) {
 		switch (input){
 		case InputControls::pMoveUp:
 			MovePlayerUp();
@@ -452,7 +500,7 @@ Game::ResetMovement()
 }
 
 
-// W02.3: Space a Bullet in game.
+
 void 
 Game::PauseGame()
 {

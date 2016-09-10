@@ -6,7 +6,7 @@ using namespace std;
 
 Player::Player()
 {
-	m_hp = 100;
+
 };
 
 
@@ -24,7 +24,7 @@ Player::damagePlayerCheck(int damage)
 	if (this->m_hp <= 0) {
 		this->SetDead(true);
 	}
-	return m_dead;
+	return (m_dead);
 }
 
 void
@@ -37,4 +37,22 @@ void
 Player::setCoins(int coins)
 {
 	m_coins = coins;
+}
+
+void 
+Player::incrementCoins(int coin)
+{
+	m_coins += coin;
+}
+
+int
+Player::getHP()
+{
+	return(m_hp);
+}
+
+int
+Player::getCoins()
+{
+	return(m_coins);
 }

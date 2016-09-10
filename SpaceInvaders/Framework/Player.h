@@ -10,9 +10,13 @@ public:
 	bool damagePlayerCheck(int damage);
 	void setHitPoints(int hp);
 	void setCoins(int coin);
+	void incrementCoins(int coin);
+	
+	int getCoins();
+	int getHP();
 	
 // Class members
-public:
+private:
 	int m_hp;
 	int m_coins;
 };

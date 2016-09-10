@@ -16,6 +16,7 @@ class Parser;
 #include "SoundSystem.h"
 #include "InputControls.h"
 #include <vector>
+#include <sstream>
 
 class Game
 {
@@ -52,13 +53,13 @@ protected:
 	// Draw and Process methods for their own respective GameStates
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
-
+	// Menu
 	void ProcessMenuState(float deltaTime);
 	void DrawMenuState(BackBuffer& backBuffer);
-
+	// Pause Menu
 	void ProcessPauseState(float deltaTime);
 	void DrawPauseState(BackBuffer& backBuffer);
-
+	// Game over
 	void ProcessGameOverState(float deltaTime);
 	void DrawGameOverState(BackBuffer& backBuffer);
 	
@@ -72,6 +73,8 @@ private:
 
 	//Member Data:
 public:
+	// Used to convert int to strings
+	std::stringstream s;
 
 protected:
 	static Game* sm_pInstance;
@@ -95,7 +98,7 @@ protected:
 	int m_FPS;
 	int m_numUpdates;
 	bool m_drawDebugInfo;
-	int m_gameState = playing; // set init value for start of game
+	int m_gameState = menu; // set init value for start of game
 
 	// Game Entities:
 	Player* pAnimPlayer;
