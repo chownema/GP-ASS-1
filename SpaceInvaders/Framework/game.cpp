@@ -112,6 +112,7 @@ Game::Initialise()
 	pAnimPlayer->setHitPoints(100);
 	pAnimPlayer->Initialise(playerSprite);
 	pAnimPlayer->setDirection("left");
+	pAnimPlayer->setIFrameTime(playerJson["i_frame_time"].GetFloat());
 	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
 	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
 	playerSprite->SetFrameHeight(playerJson["frame_height"].GetInt());
@@ -320,8 +321,7 @@ Game::Process(float deltaTime)
 		// If collision end game and kill player
 		if (ene->IsCollidingWithAnim(*pAnimPlayer)) {
 			// Damage player and set dead if no hp left
-			pAnimPlayer->damagePlayerCheck(25);
-			
+			pAnimPlayer->damagePlayerCheck(25, m_executionTime +0.5);
 			// Create animation hit effect
 			SpawnExplosion(x, y);
 		}
