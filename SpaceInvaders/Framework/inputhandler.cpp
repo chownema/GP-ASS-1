@@ -76,7 +76,6 @@ InputHandler::ProcessInput(Game& game)
 			}
 			if (e.key.keysym.sym == SDLK_SPACE) {
 				// no shooting only peaceful cat
-				//game.PauseGame();
 				select = true;
 			}
 			if (e.key.keysym.sym == SDLK_p) {
