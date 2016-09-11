@@ -13,11 +13,16 @@ class SoundSystem;
 class Coin;
 class Parser;
 class MenuItem;
+class AnimatedSprite;
 
 #include "SoundSystem.h"
 #include "InputControls.h"
+#include "rapidjson/document.h"
 #include <vector>
 #include <sstream>
+#include <string>
+
+using namespace std;
 
 class Game
 {
@@ -47,6 +52,9 @@ public:
 	void SpawnCoin(int x, int y);
 
 	void InputRouter(InputControls input);
+
+	// sets up animation settings for a sprite and applies it to an animEntity
+	void setupAnimSprite(AnimatedSprite* sprite, string type, AnimEntity* aEntity);
 
 
 	

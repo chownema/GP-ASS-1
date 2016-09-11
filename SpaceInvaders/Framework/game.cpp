@@ -99,7 +99,7 @@ Game::Initialise()
 		return (false);
 	}
 
-	// menu item entities
+	
 
 	// Load player data
 	const Value& playerJson = Parser::GetInstance().document["player"];
@@ -113,38 +113,34 @@ Game::Initialise()
 	pAnimPlayer->Initialise(playerSprite);
 	pAnimPlayer->setDirection("left");
 	pAnimPlayer->setIFrameTime(playerJson["i_frame_time"].GetFloat());
-	playerSprite->SetFrameSpeed(playerJson["frame_speed"].GetFloat());
-	playerSprite->SetFrameWidth(playerJson["frame_width"].GetInt());
-	playerSprite->SetFrameHeight(playerJson["frame_height"].GetInt());
-	playerSprite->SetNumOfFrames(playerJson["num_frames"].GetInt());
-	playerSprite->SetLooping(playerJson["looping"].GetBool());
+
+	// Call generic setup sprite function
+	setupAnimSprite(playerSprite, "player", pAnimPlayer);
+
 	pAnimPlayer->setX(width / 2);
 	pAnimPlayer->setY(height / 2);
 
-	
+	// menu item entities
 	// Play button
 	const Value& mItemJson = Parser::GetInstance().document["menu_item"];
 	AnimatedSprite* mItemASprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
 	pItemA = new MenuItem();
-	pItemA->Initialise(mItemASprite);
-	mItemASprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
-	mItemASprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
-	mItemASprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
-	mItemASprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
-	mItemASprite->SetLooping(mItemJson["looping"].GetBool());
+
+	// Call generic setup sprite function
+	setupAnimSprite(mItemASprite, "menu_item", pItemA);
+
 	pItemA->setName("play");
+	// Position on screen
 	pItemA->setX(width-(width*0.982));
 	pItemA->setY(height - (height*0.4));
 	
 	// Exit button
 	AnimatedSprite* mItemBSprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
 	pItemB = new MenuItem();
-	pItemB->Initialise(mItemBSprite);
-	mItemBSprite->SetFrameSpeed(mItemJson["frame_speed"].GetFloat());
-	mItemBSprite->SetFrameWidth(mItemJson["frame_width"].GetInt());
-	mItemBSprite->SetFrameHeight(mItemJson["frame_height"].GetInt());
-	mItemBSprite->SetNumOfFrames(mItemJson["num_frames"].GetInt());
-	mItemBSprite->SetLooping(mItemJson["looping"].GetBool());
+
+	// Call generic setup sprite function
+	setupAnimSprite(mItemBSprite, "menu_item", pItemB);
+
 	pItemB->setName("exit");
 	pItemB->setX(width - (width*0.4));
 	pItemB->setY(height - (height*0.4));
@@ -260,10 +256,12 @@ Game::DrawMenuState(BackBuffer& backBuffer)
 	SDL_Color colour = { 0, 0, 0, 255 };
 	int mainHeaderSize = 200;
 	int textSize = 150;
+	int instructionTextSize = 30;
 	// Draw menu text
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", "MENU", mainHeaderSize, width - (width*0.68), 0);
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "EXIT", textSize, width - (width*0.3), height - 200);
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "PLAY", textSize, width - (width*0.9), height - 200);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", "Press SPACE to Select..", instructionTextSize, width - (width*0.58), height - 100);
 
 	// Draw selector around Play
 	if (pItemA->getActiveStatus())
@@ -642,11 +640,9 @@ Game::SpawnExplosion(int x, int y)
 
 	// W02.2: Create a new Enemy object.
 	AnimEntity* e = new AnimEntity();
-	e->Initialise(explosionSprite);
-	explosionSprite->SetFrameSpeed(0.4f);
-	explosionSprite->SetFrameWidth(64);
-	explosionSprite->SetFrameHeight(64);
-	explosionSprite->SetNumOfFrames(4);
+
+	// Call generic setup sprite function
+	setupAnimSprite(explosionSprite, "explosion", e);
 
 	e->setX(x);
 	e->setY(y);
@@ -665,22 +661,24 @@ Game::SpawnCoin(int x, int y)
 	Coin* e = new Coin();
 	e->setLifeSpan(coinJson["life_span"].GetFloat());
 	e->setTimeBorn(m_executionTime + 0.5);
-	e->Initialise(coinSprite);
-	coinSprite->SetFrameSpeed(coinJson["frame_speed"].GetFloat());
-	coinSprite->SetFrameWidth(coinJson["frame_width"].GetInt());
-	coinSprite->SetFrameHeight(coinJson["frame_height"].GetInt());
-	coinSprite->SetNumOfFrames(coinJson["num_frames"].GetInt());
-	coinSprite->SetLooping(coinJson["looping"].GetBool());
-
+	// Call generic setup sprite function
+	setupAnimSprite(coinSprite, "coin", e);
 	e->setX(x);
 	e->setY(y);
 	
 	pCoinVector.push_back(e);
 }
 
-float RandomFloat(float a, float b) {
-	float random = ((float)rand()) / (float)RAND_MAX;
-	float diff = b - a;
-	float r = random * diff;
-	return a + r;
+void 
+Game::setupAnimSprite(AnimatedSprite* sprite, string type, AnimEntity* aEntity)
+{
+	const Value& json = Parser::GetInstance().document[type.c_str()];
+	// Apply sprite to entity
+	aEntity->Initialise(sprite);
+	// Apply animation settings from provided json
+	sprite->SetFrameSpeed(json["frame_speed"].GetFloat());
+	sprite->SetFrameWidth(json["frame_width"].GetInt());
+	sprite->SetFrameHeight(json["frame_height"].GetInt());
+	sprite->SetNumOfFrames(json["num_frames"].GetInt());
+	sprite->SetLooping(json["looping"].GetBool());
 }
