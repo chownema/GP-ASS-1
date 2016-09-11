@@ -36,10 +36,10 @@ public:
 	bool DoGameLoop();
 	void Quit();
 
-	void MovePlayerLeft();
-	void MovePlayerRight();
-	void MovePlayerUp();
-	void MovePlayerDown();
+	void MovePlayerLeft(float dist);
+	void MovePlayerRight(float dist);
+	void MovePlayerUp(float dist);
+	void MovePlayerDown(float dist);
 
 	void StopMovePlayerHorizontal();
 	void StopMovePlayerVertical();

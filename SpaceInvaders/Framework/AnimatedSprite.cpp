@@ -74,7 +74,7 @@ AnimatedSprite::Process(float deltaTime)
 				m_currentFrame = 0;
 			// W02.4: Stop the animation if it is not looping...
 			else
-				Pause();
+				Pause(true);
 		}
 	}
 }
@@ -83,13 +83,7 @@ AnimatedSprite::Process(float deltaTime)
 void
 AnimatedSprite::Draw(BackBuffer& backbuffer)
 {
-	// W02.4: Draw the particular frame into the backbuffer.
 	backbuffer.DrawAnimatedSprite(*this);
-	//          What is the current frame's x coordinate?
-	//m_currentFrame;
-	//          What is the frame width?
-	//SetFrameWidth(320);
-	// Set frame height
 }
 
 void 
@@ -122,9 +116,11 @@ AnimatedSprite::SetFrameHeight(int h) {
 }
 
 void
-AnimatedSprite::Pause()
+AnimatedSprite::Pause(bool pause)
 {
-	m_paused = !m_paused;
+	m_paused = pause;
+	if (pause)
+		m_currentFrame = 0;
 }
 
 bool

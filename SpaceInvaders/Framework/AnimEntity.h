@@ -24,6 +24,9 @@ public:
 	float GetPositionX();
 	float GetPositionY();
 
+	std::string getType();
+	void setType(const std::string type);
+
 	void setDirection(std::string direction);
 	std::string getDirection();
 
@@ -52,6 +55,9 @@ protected:
 	bool m_dead;
 
 	std::string m_direction;
+
+	// type of entity
+	std::string type;
 
 };
 #endif // __ANINENTITY_H__

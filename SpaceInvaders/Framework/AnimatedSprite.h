@@ -35,7 +35,7 @@ public:
 	float GetFrameSpeed();
 	int getYDrawPos();
 
-	void Pause();
+	void Pause(bool pause);
 	bool IsPaused();
 
 	bool IsAnimating();

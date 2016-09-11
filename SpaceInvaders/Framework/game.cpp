@@ -113,14 +113,15 @@ Game::Initialise()
 	pAnimPlayer->Initialise(playerSprite);
 	pAnimPlayer->setDirection("left");
 	pAnimPlayer->setIFrameTime(playerJson["i_frame_time"].GetFloat());
+	pAnimPlayer->setType("player");
 
 	// Call generic setup sprite function
 	setupAnimSprite(playerSprite, "player", pAnimPlayer);
-
+	// Position on screen
 	pAnimPlayer->setX(width / 2);
 	pAnimPlayer->setY(height / 2);
 
-	// menu item entities
+	/* Menu item Entities */
 	// Play button
 	const Value& mItemJson = Parser::GetInstance().document["menu_item"];
 	AnimatedSprite* mItemASprite = m_pBackBuffer->CreateAnimatedSprite(mItemJson["sprite_loc"].GetString());
@@ -128,7 +129,7 @@ Game::Initialise()
 
 	// Call generic setup sprite function
 	setupAnimSprite(mItemASprite, "menu_item", pItemA);
-
+	// Setup identifier
 	pItemA->setName("play");
 	// Position on screen
 	pItemA->setX(width-(width*0.982));
@@ -489,20 +490,20 @@ Game::InputRouter(InputControls input) {
 	if (m_gameState == m_gameState_e::playing || m_gameState == m_gameState_e::menu) {
 		switch (input){
 		case InputControls::pMoveUp:
-			MovePlayerUp();
+			MovePlayerUp(1);
 			break;
 		case InputControls::pMoveDown:
-			MovePlayerDown();
+			MovePlayerDown(1);
 			break;
 		case InputControls::pMoveLeft:
-			MovePlayerLeft();
+			MovePlayerLeft(1);
 			// Change orientation of sprite
-			pAnimPlayer->getAnimSprite()->SetYDrawPos(0);
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight()*2);
 			break;
 		case InputControls::pMoveRight:
-			MovePlayerRight();
+			MovePlayerRight(1);
 			// Change orientation of sprite
-			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight());
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight()*3);
 			break;
 		case InputControls::mSelect:
 			if (pItemA->getActiveStatus())
@@ -517,27 +518,27 @@ Game::InputRouter(InputControls input) {
 /* Player movements */
 
 void 
-Game::MovePlayerLeft()
+Game::MovePlayerLeft(float dist)
 {
-	pAnimPlayer->SetHorizontalVelocity(-playerSpeed);
+	pAnimPlayer->SetHorizontalVelocity(-playerSpeed*dist);
 }
 
 void
-Game::MovePlayerRight()
+Game::MovePlayerRight(float dist)
 {
-	pAnimPlayer->SetHorizontalVelocity(playerSpeed);
+	pAnimPlayer->SetHorizontalVelocity(playerSpeed*dist);
 }
 
 void
-Game::MovePlayerUp()
+Game::MovePlayerUp(float dist)
 {
-	pAnimPlayer->SetVerticalVelocity(-playerSpeed);
+	pAnimPlayer->SetVerticalVelocity(-playerSpeed*dist);
 }
 
 void
-Game::MovePlayerDown()
+Game::MovePlayerDown(float dist)
 {
-	pAnimPlayer->SetVerticalVelocity(playerSpeed);
+	pAnimPlayer->SetVerticalVelocity(playerSpeed*dist);
 }
 
 /* Stop movement methods */

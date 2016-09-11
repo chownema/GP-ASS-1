@@ -22,6 +22,7 @@ AnimEntity::AnimEntity()
 , m_velocityX(0.0f)
 , m_velocityY(0.0f)
 , m_dead(false)
+, type("")
 {
 
 }
@@ -42,6 +43,7 @@ AnimEntity::Initialise(AnimatedSprite* sprite)
 void
 AnimEntity::Process(float deltaTime)
 {
+	
 	m_pAnimSprite->Process(deltaTime);
 
 	m_pAnimSprite->SetX(static_cast<int>(m_x));
@@ -49,6 +51,16 @@ AnimEntity::Process(float deltaTime)
 
 	m_x += m_velocityX;
 	m_y += m_velocityY;
+
+	if (this->getType() == "player") {
+		// Check if not moving
+		if (m_velocityX == 0 && m_velocityY == 0) {
+			// Set Frame to still
+			m_pAnimSprite->Pause(true);
+		}
+		else
+			m_pAnimSprite->Pause(false);
+	}
 }
 
 void
@@ -186,4 +198,16 @@ void
 AnimEntity::SetVerticalVelocity(float y)
 {
 	m_velocityY = y;
+}
+
+
+string 
+AnimEntity::getType()
+{
+	return (type);
+}
+void 
+AnimEntity::setType(const string nType)
+{
+	type = nType;
 }
