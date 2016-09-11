@@ -122,11 +122,13 @@ protected:
 	std::vector<Enemy*> pEnemyVector;
 	std::vector<AnimEntity*> pExplosionVector;
 	std::vector<Coin*> pCoinVector;
-	
+	std::vector<MenuItem*> pPlantsVector;
+
 	// Vector Iterators
 	std::vector<AnimEntity*>::iterator itExplosion;
 	std::vector<Enemy*>::iterator itEnemy;
 	std::vector<Coin*>::iterator itCoin;
+	std::vector<MenuItem*>::iterator itPlant;
 	// FMOD
 	SoundSystem sound;
 
