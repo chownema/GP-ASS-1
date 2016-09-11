@@ -489,6 +489,20 @@ Game::InputRouter(InputControls input) {
 	// Evaluate string input
 	if (m_gameState == m_gameState_e::playing || m_gameState == m_gameState_e::menu) {
 		switch (input){
+		case InputControls::pJumpUp:
+			MovePlayerUp(2);
+			break;
+		case InputControls::pJumpDown:
+			MovePlayerDown(2);
+			break;
+		case InputControls::pJumpLeft:
+			MovePlayerLeft(2);
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 4);
+			break;
+		case InputControls::pJumpRight:
+			MovePlayerRight(2);
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 5);
+			break;
 		case InputControls::pMoveUp:
 			MovePlayerUp(1);
 			break;
@@ -498,11 +512,13 @@ Game::InputRouter(InputControls input) {
 		case InputControls::pMoveLeft:
 			MovePlayerLeft(1);
 			// Change orientation of sprite
+			pAnimPlayer->setDirection("left");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight()*2);
 			break;
 		case InputControls::pMoveRight:
 			MovePlayerRight(1);
 			// Change orientation of sprite
+			pAnimPlayer->setDirection("right");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight()*3);
 			break;
 		case InputControls::mSelect:

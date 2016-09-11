@@ -56,8 +56,12 @@ AnimEntity::Process(float deltaTime)
 		// Check if not moving
 		if (m_velocityX == 0 && m_velocityY == 0) {
 			// Set Frame to still
-			m_pAnimSprite->Pause(true);
-		}
+			//m_pAnimSprite->Pause(true);
+			if (m_direction == "right")
+				m_pAnimSprite->SetYDrawPos(0);
+			else
+				m_pAnimSprite->SetYDrawPos(m_pAnimSprite->GetFrameHeight()*1);
+		} 
 		else
 			m_pAnimSprite->Pause(false);
 	}

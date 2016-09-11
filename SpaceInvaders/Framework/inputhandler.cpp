@@ -41,7 +41,7 @@ InputHandler::Initialise()
 	moveRight = false;
 	select = false;
 	//assert(m_pGameController);
-
+	jump = false;
 	return (true);
 }
 
@@ -81,6 +81,9 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_p) {
 				game.PauseGame();
 			}
+			if (e.key.keysym.sym == SDLK_x) {
+				jump = true;
+			}
 		}
 		else if (e.type == SDL_KEYUP) {
 			if (e.key.keysym.sym == SDLK_LEFT) {
@@ -98,6 +101,9 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_DOWN) {
 				moveDown = false;
 				game.StopMovePlayerVertical();
+			}
+			if (e.key.keysym.sym == SDLK_x) {
+				jump = false;
 			}
 		}
 
@@ -121,6 +127,30 @@ InputHandler::ProcessInput(Game& game)
 		{
 			game.InputRouter(InputControls::pMoveRight);
 		}
+
+		if (jump)
+		{
+			if (moveUp)
+			{
+				game.InputRouter(InputControls::pJumpUp);
+			}
+
+			if (moveDown)
+			{
+				game.InputRouter(InputControls::pJumpDown);
+			}
+
+			if (moveLeft)
+			{
+				game.InputRouter(InputControls::pJumpLeft);
+			}
+
+			if (moveRight)
+			{
+				game.InputRouter(InputControls::pJumpRight);
+			}
+		}
+
 		if (select)
 		{
 			game.InputRouter(InputControls::mSelect);
