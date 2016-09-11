@@ -110,6 +110,9 @@ protected:
 	bool m_drawDebugInfo;
 	int m_gameState = menu; // set init value for start of game
 
+	int m_difficultyIncrease = 0;
+	int spawningTicks;
+
 	// Menu Entities
 	MenuItem* pItemA;
 	MenuItem* pItemB;

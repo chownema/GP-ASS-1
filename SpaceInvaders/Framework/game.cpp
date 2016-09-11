@@ -84,6 +84,9 @@ Game::Initialise()
 {
 	// Load in data
 	Parser::GetInstance().loadInFile("data.ini");
+	const Value& enemyJson = Parser::GetInstance().document["enemy"];
+	spawningTicks = enemyJson["spawning_ticks"].GetInt();
+
 	
 	m_pBackBuffer = new BackBuffer();
 	if (!m_pBackBuffer->Initialise(width, height))
@@ -287,10 +290,21 @@ Game::Process(float deltaTime)
 	m_elapsedSeconds += deltaTime;
 	
 	// Spawn Enemy on a timer
+	const Value& enemyJson = Parser::GetInstance().document["enemy"];
+	if (0 == int(m_executionTime+0.5) % enemyJson["ease_ratio"].GetInt())
+		m_difficultyIncrease += enemyJson["difficulty_increase"].GetFloat();
+		
+	if (0 < spawningTicks - m_difficultyIncrease) 
+	{
+		spawningTicks = spawningTicks - int(m_difficultyIncrease/16);
+	}
+
 	comparisonTime++;
-	if (0==comparisonTime % 10) {
-		int x = (0 + (rand() % (int)(3 - 0 + 1)));
-		SpawnEnemy(x);
+	if (0 == comparisonTime % spawningTicks) {
+		if (0 == int(m_elapsedSeconds + 0.5) % 1) {
+			int x = (0 + (rand() % (int)(3 - 0 + 1)));
+			SpawnEnemy(x);
+		}
 	}
 
 	// Spawn Coins on a timer
@@ -459,6 +473,12 @@ Game::Draw(BackBuffer& backBuffer)
 	s.str(""); // Clear stream
 	const char* FPSChar = fpsString.c_str();
 
+	// FPS Text Char
+	s << m_difficultyIncrease;
+	string diffString = "Difficulty " + s.str();
+	s.str(""); // Clear stream
+	const char* diffChar = diffString.c_str();
+
 		
 	SDL_Color colour = { 0, 0, 0, 255 };
 	// Draw Score Text
@@ -469,7 +489,9 @@ Game::Draw(BackBuffer& backBuffer)
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
 	// Draw Coins Text
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", diffChar, 40, width - 350, 0);
 
+	
 	backBuffer.Present();
 }
 
@@ -497,10 +519,12 @@ Game::InputRouter(InputControls input) {
 			break;
 		case InputControls::pJumpLeft:
 			MovePlayerLeft(2);
+			pAnimPlayer->setDirection("left");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 4);
 			break;
 		case InputControls::pJumpRight:
 			MovePlayerRight(2);
+			pAnimPlayer->setDirection("right");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 5);
 			break;
 		case InputControls::pMoveUp:
