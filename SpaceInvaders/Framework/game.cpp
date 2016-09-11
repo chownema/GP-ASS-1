@@ -354,10 +354,17 @@ Game::Process(float deltaTime)
 	//pPlayer->Process(deltaTime);
 	pAnimPlayer->Process(deltaTime);
 
-	// Process Explosions
-	for (int i = 0; i < pExplosionVector.size(); i++)
+	for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
 	{
-		pExplosionVector[i]->Process(deltaTime);
+		AnimEntity* explosion = *itExplosion;
+		explosion->Process(deltaTime);
+		// If collision Collect coin and remove it
+		if (explosion->getAnimSprite()->IsPaused()) {
+			delete *itExplosion;
+			itExplosion = pExplosionVector.erase(itExplosion);
+		}
+		else
+			itExplosion++;
 	}
 
 	// Process Coins
