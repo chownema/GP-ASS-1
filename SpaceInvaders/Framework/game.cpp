@@ -91,7 +91,9 @@ Game::Initialise()
 {
 	// Load in data
 	Parser::GetInstance().loadInFile("data.ini");
+	// Load in data to json obj
 	const Value& enemyJson = Parser::GetInstance().document["enemy"];
+	// set some variables
 	m_spawningAmount = enemyJson["spawn_amount_per_second"].GetInt();
 	m_increaseDifficulty = enemyJson["difficulty_increase"].GetInt(); 
 
@@ -109,6 +111,21 @@ Game::Initialise()
 			LogManager::GetInstance().Log("InputHandler Init Fail!");
 			return (false);
 		}
+		const Value& soundJson = Parser::GetInstance().document["sounds"];
+
+
+		// Create a sample sound
+		FMOD::Sound* soundSample;
+		sound.createSound(&soundSample, soundJson["menu"].GetString());
+
+		// Play the sound, with loop mode
+		sound.playSound(soundSample, true);
+
+		//// Do something meanwhile...
+
+		//// Release the sound
+		////sound.releaseSound(soundSample);
+
 		m_programRunning = true;
 	}
 	
@@ -165,17 +182,7 @@ Game::Initialise()
 	m_lag = 0.0f;
 
 
-	// Create a sample sound
-	FMOD::Sound* soundSample;
-	sound.createSound(&soundSample, "sounds\\drumloop.wav");
 
-	// Play the sound, with loop mode
-	sound.playSound(soundSample, true);
-
-	//// Do something meanwhile...
-	
-	//// Release the sound
-	////sound.releaseSound(soundSample);
 
 	return (true);
 }
