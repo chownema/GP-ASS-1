@@ -56,6 +56,8 @@ protected:
 
 	std::string m_direction;
 
+	bool invunrable;
+
 	// type of entity
 	std::string type;
 

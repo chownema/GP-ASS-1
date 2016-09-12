@@ -6,7 +6,7 @@ enum struct InputControls
 {
 	pMoveUp = 0, pMoveDown, pMoveLeft, pMoveRight, mMoveLeft,
 	mMoveRight, pJumpUp, pJumpDown, pJumpLeft, pJumpRight, mJumpLeft,
-	mJumpRight, mSelect, pPauseToggle
+	mJumpRight, mSelect, pPauseToggle, pHit
 };
 
 #endif //__INPUTCONTROLS_H__

@@ -26,6 +26,5 @@ private:
 	int m_coins;
 	float m_iFrameTime;
 	int m_timeHit;
-	bool invunrable;
 };
 #endif

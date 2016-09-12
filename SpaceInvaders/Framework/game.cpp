@@ -387,6 +387,7 @@ Game::Process(float deltaTime)
 			// Damage player and set dead if no hp left
 			pAnimPlayer->damagePlayerCheck(25, m_executionTime +0.5);
 			// Create animation hit effect
+			InputRouter(InputControls::pHit);
 			SpawnExplosion(x, y);
 		}
 		// if out of bounds remove enemy
@@ -569,6 +570,9 @@ Game::InputRouter(InputControls input) {
 	// Evaluate string input
 	if (m_gameState == m_gameState_e::playing || m_gameState == m_gameState_e::menu) {
 		switch (input){
+		case InputControls::pHit:
+			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 8);
+			break;
 		case InputControls::pJumpUp:
 			MovePlayerUp(2);
 			break;
