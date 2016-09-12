@@ -287,7 +287,7 @@ Game::DrawGameOverState(BackBuffer& backBuffer)
 	
 	// Coins Text Char	
 	s << pAnimPlayer->getCoins();
-	string coinsString = "Coins Stolen " + s.str();
+	string coinsString = "Coins Gobbled " + s.str();
 	s.str(""); // Clear stream
 	const char* coinChar = coinsString.c_str();
 
