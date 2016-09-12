@@ -31,6 +31,8 @@ public:
 	bool moveLeft; 
 	bool moveRight;
 	bool select;
+	
+	bool z;
 
 	bool jump;
 protected:

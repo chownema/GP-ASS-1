@@ -30,8 +30,8 @@ Player::damagePlayerCheck(int damage, float time)
 		// Set to normal
 		invunrable = false;
 		// Check if dead
-		if (this->m_hp <= 0) {
-			this->SetDead(true);
+		if (this->m_hp < 1) {
+			return true;
 		}
 		// reset time hit
 		m_timeHit = 0;
@@ -42,8 +42,6 @@ Player::damagePlayerCheck(int damage, float time)
 		invunrable = true;
 		
 	}
-		
-
 	return (m_dead);
 }
 

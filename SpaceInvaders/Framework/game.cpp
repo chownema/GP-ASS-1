@@ -95,32 +95,35 @@ Game::Initialise()
 	m_spawningAmount = enemyJson["spawn_amount_per_second"].GetInt();
 	m_increaseDifficulty = enemyJson["difficulty_increase"].GetInt(); 
 
-	
-	m_pBackBuffer = new BackBuffer();
-	if (!m_pBackBuffer->Initialise(width, height))
-	{
-		LogManager::GetInstance().Log("BackBuffer Init Fail!");
-		return (false);
-	}
+	if (!m_programRunning) {
+		m_pBackBuffer = new BackBuffer();
+		if (!m_pBackBuffer->Initialise(width, height))
+		{
+			LogManager::GetInstance().Log("BackBuffer Init Fail!");
+			return (false);
+		}
 
-	m_pInputHandler = new InputHandler();
-	if (!m_pInputHandler->Initialise())
-	{
-		LogManager::GetInstance().Log("InputHandler Init Fail!");
-		return (false);
+		m_pInputHandler = new InputHandler();
+		if (!m_pInputHandler->Initialise())
+		{
+			LogManager::GetInstance().Log("InputHandler Init Fail!");
+			return (false);
+		}
+		m_programRunning = true;
 	}
+	
+
 
 	
 
 	// Load player data
 	const Value& playerJson = Parser::GetInstance().document["player"];
-	int HEALTH = playerJson["health"].GetInt();
 	playerSpeed = playerJson["speed"].GetInt();
 	// Set player data on player object
 	AnimatedSprite* playerSprite = m_pBackBuffer->CreateAnimatedSprite(playerJson["sprite_loc"].GetString());
 	pAnimPlayer = new Player();
 	pAnimPlayer->setCoins(0);
-	pAnimPlayer->setHitPoints(100);
+	pAnimPlayer->setHitPoints(playerJson["health"].GetInt());
 	pAnimPlayer->Initialise(playerSprite);
 	pAnimPlayer->setDirection("left");
 	pAnimPlayer->setIFrameTime(playerJson["i_frame_time"].GetFloat());
@@ -220,7 +223,13 @@ Game::DoGameLoop()
 		}
 		// Game Over State
 		else if (m_gameState == m_gameState_e::lost) {
-
+			while (m_lag >= stepSize)
+			{
+				Process(stepSize);
+				m_lag -= stepSize;
+				++m_numUpdates;
+			}
+			DrawGameOverState(*m_pBackBuffer);
 		}
 		// Menu State
 		else if (m_gameState == m_gameState_e::menu) {
@@ -236,6 +245,60 @@ Game::DoGameLoop()
 
 	SDL_Delay(1);
 	return (m_looping);
+}
+
+void 
+Game::ProcessGameOverState(float deltaTime)
+{
+
+}
+
+void 
+Game::DrawGameOverState(BackBuffer& backBuffer)
+{
+	++m_frameCount;
+
+	backBuffer.Clear();
+
+	// Draw enemies
+	for (int i = 0; i < pEnemyVector.size(); i++) {
+		pEnemyVector[i]->Draw(backBuffer);
+	}
+
+	// Draw Explosions
+	for (int i = 0; i < pExplosionVector.size(); i++) {
+		pExplosionVector[i]->Draw(backBuffer);
+	}
+
+	// Draw Coins
+	for (int i = 0; i < pCoinVector.size(); i++) {
+		pCoinVector[i]->Draw(backBuffer);
+	}
+
+	// Draw Player
+	pAnimPlayer->Draw(backBuffer);
+
+	// Score Text Char	
+	s << m_timeSurvived;
+	string survivedString = "Time Survived " + s.str();
+	s.str(""); // Clear stream
+	const char* SurvivedChar = survivedString.c_str();
+	
+	
+	// Coins Text Char	
+	s << pAnimPlayer->getCoins();
+	string coinsString = "Coins Stolen " + s.str();
+	s.str(""); // Clear stream
+	const char* coinChar = coinsString.c_str();
+
+	SDL_Color colour = { 0, 0, 0, 255 };
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", "Press SPACE to Restart", 100, width - (width*0.68), height-(height*0.85));
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", "Press Z to Go Menu", 100, width - (width*0.68), 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", SurvivedChar, 50, width - (width*0.90), height - (height*0.5));
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//Amatic-Bold.ttf", coinChar, 50, width - (width*0.45), height - (height*0.5));
+
+
+	backBuffer.Present();
 }
 
 /*Process and Draw For Menu State*/
@@ -298,79 +361,80 @@ Game::Process(float deltaTime)
 	m_elapsedSeconds += deltaTime;
 	
 	
-
-	// Spawn Enemy on a timer
-	const Value& enemyJson = Parser::GetInstance().document["enemy"];
-	if (0 == int(m_executionTime + 0.5) % int(enemyJson["difficulty_increase_seconds"].GetInt())){
-		m_canIncreaseDifficulty = true;
-	}
-
-	// decrease difficulty
-	if (m_canIncreaseDifficulty)
-	{
-		if (0 == int(m_executionTime + 0.5) % enemyJson["difficulty_increase_seconds"].GetInt()) {
-
-			if (m_difficultyCounter < 2)
-			{
-				m_difficultyCounter++;
-				// hold onnn were going homeee
-			}
-			else {
-				// Set Cant spawn after limit has been reached
-				m_canIncreaseDifficulty = false;
-				offloader = 1;
-			}
+	if (!(m_gameState == m_gameState_e::lost)) {
+		// Spawn Enemy on a timer
+		const Value& enemyJson = Parser::GetInstance().document["enemy"];
+		if (0 == int(m_executionTime + 0.5) % int(enemyJson["difficulty_increase_seconds"].GetInt())){
+			m_canIncreaseDifficulty = true;
 		}
-	}
-	else{
-		// increase difficulty
-		m_spawnLimiter -= offloader;
-		// ensure doesnt go bellow 1
-		if (m_spawnLimiter < 1)
-			m_spawnLimiter = 2;
-		offloader = 0;
-		// Reset the spawn counter
-		m_difficultyCounter = 0;
-	}
-	comparisonTime++;
-	
 
-	// spawn every 1 seconds
-	if (0 == int(m_executionTime + 0.5) % enemyJson["spawn_per_second"].GetInt()) {
-		// Set can spawn
-		m_canSpawn = true;
-		// amount spawning per second
-		if (0 == comparisonTime % m_spawnLimiter) {
-			if (m_canSpawn) {
-				if (m_spawnCount < m_spawningAmount) {
-					int x = (0 + (rand() % (int)(3 - 0 + 1)));
-					SpawnEnemy(x, 0);
-					m_spawnCount++;
+		// decrease difficulty
+		if (m_canIncreaseDifficulty)
+		{
+			if (0 == int(m_executionTime + 0.5) % enemyJson["difficulty_increase_seconds"].GetInt()) {
+
+				if (m_difficultyCounter < 2)
+				{
+					m_difficultyCounter++;
+					// hold onnn were going homeee
 				}
-				else{
+				else {
 					// Set Cant spawn after limit has been reached
-					m_canSpawn = false;
-					// Reset the spawn counter
-					m_spawnCount = 0;
+					m_canIncreaseDifficulty = false;
+					offloader = 1;
 				}
 			}
 		}
-	}
-	
+		else{
+			// increase difficulty
+			m_spawnLimiter -= offloader;
+			// ensure doesnt go bellow 1
+			if (m_spawnLimiter < 1)
+				m_spawnLimiter = 2;
+			offloader = 0;
+			// Reset the spawn counter
+			m_difficultyCounter = 0;
+		}
+		comparisonTime++;
 
-	// Spawn Coins on a timer
-	if (0 == comparisonTime % 100) {
-		int x = (0 + (rand() % (int)(width - 0 + 1)));
-		int y = (0 + (rand() % (int)(height - 0 + 1)));
-		SpawnCoin(x, y);
-	}
 
-	// Frame Counter:
-	if (m_elapsedSeconds > 1)
-	{
-		m_elapsedSeconds -= 1;
-		m_FPS = m_frameCount;
-		m_frameCount = 0;
+		// spawn every 1 seconds
+		if (0 == int(m_executionTime + 0.5) % enemyJson["spawn_per_second"].GetInt()) {
+			// Set can spawn
+			m_canSpawn = true;
+			// amount spawning per second
+			if (0 == comparisonTime % m_spawnLimiter) {
+				if (m_canSpawn) {
+					if (m_spawnCount < m_spawningAmount) {
+						int x = (0 + (rand() % (int)(3 - 0 + 1)));
+						SpawnEnemy(x, 0);
+						m_spawnCount++;
+					}
+					else{
+						// Set Cant spawn after limit has been reached
+						m_canSpawn = false;
+						// Reset the spawn counter
+						m_spawnCount = 0;
+					}
+				}
+			}
+		}
+
+
+		// Spawn Coins on a timer
+		if (0 == comparisonTime % 100) {
+			int x = (0 + (rand() % (int)(width - 0 + 1)));
+			int y = (0 + (rand() % (int)(height - 0 + 1)));
+			SpawnCoin(x, y);
+		}
+
+		// Frame Counter:
+		if (m_elapsedSeconds > 1)
+		{
+			m_elapsedSeconds -= 1;
+			m_FPS = m_frameCount;
+			m_frameCount = 0;
+		}
 	}
 
 	// Update the game world simulation:
@@ -385,7 +449,13 @@ Game::Process(float deltaTime)
 		// If collision end game and kill player
 		if (ene->IsCollidingWithAnim(*pAnimPlayer)) {
 			// Damage player and set dead if no hp left
-			pAnimPlayer->damagePlayerCheck(25, m_executionTime +0.5);
+			if (pAnimPlayer->damagePlayerCheck(25, m_executionTime + 0.5))
+			{
+				// set time
+				m_timeSurvived = m_executionTime;
+				m_gameState = lost;
+				pAnimPlayer->setCanMove(false);
+			}
 			// Create animation hit effect
 			InputRouter(InputControls::pHit);
 			SpawnExplosion(x, y);
@@ -403,7 +473,6 @@ Game::Process(float deltaTime)
 	}
 	
 	// Update player
-	//pPlayer->Process(deltaTime);
 	pAnimPlayer->Process(deltaTime);
 
 	for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
@@ -614,6 +683,18 @@ Game::InputRouter(InputControls input) {
 				Quit();
 			break;
 		}
+
+	}
+	else if (m_gameState == m_gameState_e::lost) {
+		switch (input){
+		case InputControls::mSelect:
+			ResetGame();
+			break;
+		case InputControls::dMenu:
+			ResetGame();
+			m_gameState = menu;
+			break;
+		}
 	}
 }
 
@@ -681,6 +762,40 @@ Game::PauseGame()
 void
 Game::StartGame() {
 	m_gameState = playing;
+}
+
+void
+Game::ResetGame()
+{
+	// Process Enemies with Player
+	for (itEnemy = pEnemyVector.begin(); itEnemy < pEnemyVector.end();)
+	{
+		delete *itEnemy;
+		itEnemy = pEnemyVector.erase(itEnemy);	
+	}
+
+	for (itExplosion = pExplosionVector.begin(); itExplosion < pExplosionVector.end();)
+	{
+			delete *itExplosion;
+			itExplosion = pExplosionVector.erase(itExplosion);
+	}
+
+	// Process Coins
+	for (itCoin = pCoinVector.begin(); itCoin < pCoinVector.end();)
+	{
+		pAnimPlayer->incrementCoins(1);
+		delete *itCoin;
+		itCoin = pCoinVector.erase(itCoin);
+	}
+	
+	// re init game	
+	Initialise();
+	m_executionTime = 0;
+	m_spawnLimiter = 20;
+	pAnimPlayer->setCoins(0);
+	pAnimPlayer->setHitPoints(100);
+	m_gameState = playing;
+	
 }
 
 // W02.2: Spawn a Enemy in game.

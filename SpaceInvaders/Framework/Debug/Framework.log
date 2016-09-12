@@ -1,32 +1,40 @@
-﻿Build started 12/09/16 4:38:28 pm.
+﻿Build started 12/09/16 6:26:44 pm.
      1>Project "\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Framework\Framework.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Framework.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\include\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\include" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\inc\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\include" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt game.cpp
          game.cpp
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(146): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(147): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(157): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(158): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(273): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(274): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(275): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(276): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(383): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(384): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(388): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(427): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(428): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(429): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(490): warning C4018: '<' : signed/unsigned mismatch
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(495): warning C4018: '<' : signed/unsigned mismatch
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(500): warning C4018: '<' : signed/unsigned mismatch
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(712): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(719): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(726): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(733): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(756): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(769): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(149): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(150): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(160): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(161): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(264): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(269): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(274): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(295): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(296): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(297): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(298): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(336): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(337): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(338): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(339): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(447): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(448): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(452): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(455): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(496): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(497): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(498): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(559): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(564): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(569): warning C4018: '<' : signed/unsigned mismatch
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(827): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(834): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(841): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(848): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(871): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(884): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.exe" /INCREMENTAL /NOLOGO /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\lib\\" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib fmodl_vc.lib SDL2_ttf.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.lib" /MACHINE:X86 Debug\AnimatedSprite.obj
          Debug\backbuffer.obj
@@ -50,4 +58,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.42
+Time Elapsed 00:00:02.33

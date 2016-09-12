@@ -19,6 +19,7 @@ public:
 	int getHP();
 	bool getInvunrability();
 	
+	
 
 // Class members
 private:

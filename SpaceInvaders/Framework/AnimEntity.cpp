@@ -54,15 +54,19 @@ AnimEntity::Process(float deltaTime)
 
 	if (this->getType() == "player") {
 		// Check if not moving
-		if (m_velocityX == 0 && m_velocityY == 0 && !invunrable) {
-			// Set Frame to still
-			if (m_direction == "right")
-				m_pAnimSprite->SetYDrawPos(0);
+		if (m_canMove){
+			if (m_velocityX == 0 && m_velocityY == 0 && !invunrable) {
+				// Set Frame to still
+				if (m_direction == "right")
+					m_pAnimSprite->SetYDrawPos(0);
+				else
+					m_pAnimSprite->SetYDrawPos(m_pAnimSprite->GetFrameHeight() * 1);
+			}
 			else
-				m_pAnimSprite->SetYDrawPos(m_pAnimSprite->GetFrameHeight()*1);
-		} 
+				m_pAnimSprite->Pause(false);
+		}
 		else
-			m_pAnimSprite->Pause(false);
+			m_pAnimSprite->SetYDrawPos(m_pAnimSprite->GetFrameHeight() * 7);
 	}
 }
 
@@ -73,6 +77,11 @@ AnimEntity::Draw(BackBuffer& backBuffer)
 	m_pAnimSprite->Draw(backBuffer);
 }
 
+void
+AnimEntity::setCanMove(bool move)
+{
+	m_canMove = move;
+}
 bool
 AnimEntity::IsCollidingWith(Entity& e)
 {

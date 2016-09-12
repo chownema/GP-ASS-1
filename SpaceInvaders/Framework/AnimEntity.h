@@ -43,6 +43,8 @@ public:
 
 	float GetVerticalVelocity();
 	void SetVerticalVelocity(float y);
+
+	void setCanMove(bool move);
 protected:
 	AnimatedSprite* m_pAnimSprite;
 
@@ -53,7 +55,7 @@ protected:
 	float m_velocityY;
 
 	bool m_dead;
-
+	bool m_canMove = true;
 	std::string m_direction;
 
 	bool invunrable;

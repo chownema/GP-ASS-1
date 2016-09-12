@@ -57,7 +57,7 @@ public:
 	// sets up animation settings for a sprite and applies it to an animEntity
 	void setupAnimSprite(AnimatedSprite* sprite, string type, AnimEntity* aEntity);
 
-
+	void ResetGame();
 	
 protected:
 	// Draw and Process methods for their own respective GameStates
@@ -75,6 +75,7 @@ protected:
 	
 	void resumeInit();
 	void StartGame();
+	
 
 private:
 	Game(const Game& game);
@@ -107,6 +108,8 @@ protected:
 	// enemy attack formation
 	int m_enemyState_e = random;
 
+	bool m_programRunning = false;
+
 	// Simulation Counters:
 	float m_elapsedSecondsTotal;
 	float m_elapsedSeconds;
@@ -130,6 +133,12 @@ protected:
 	int m_spawnLimiter;
 	int round;
 	int offloader;
+
+
+	// Variables used for the end game screen
+	int m_timeSurvived;
+	int m_coinsCollected;
+
 
 	// Menu Entities
 	MenuItem* pItemA;
