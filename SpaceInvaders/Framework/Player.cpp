@@ -54,12 +54,6 @@ Player::setInvunrability(bool invunrability)
 }
 
 void
-Player::setHitPoints(int hitPoints)
-{
-	m_hp = hitPoints;
-}
-
-void
 Player::setHitFrame()
 {
 	m_pAnimSprite->SetYDrawPos(m_pAnimSprite->GetFrameHeight()*2);
@@ -68,31 +62,6 @@ void
 Player::setIFrameTime(float time)
 {
 	m_iFrameTime = time;
-}
-
-void
-Player::setCoins(int coins)
-{
-	if (canGetCoin)
-	m_coins = coins;
-}
-
-void 
-Player::incrementCoins(int coin)
-{
-	m_coins += coin;
-}
-
-int
-Player::getHP()
-{
-	return(m_hp);
-}
-
-int
-Player::getCoins()
-{
-	return(m_coins);
 }
 
 bool

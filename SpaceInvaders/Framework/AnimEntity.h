@@ -47,15 +47,24 @@ public:
 	void setCanMove(bool move);
 
 	// Get and Toggle admin invunrability
+	// Player
 	void toggleAInvunrability(bool bol);
 	bool getAInvunrability();
 
 	void setCanGetCoins(bool coin);
+	void setHitPoints(int hp);
+	int getCoins();
+	int getHP();
+	void setCoins(int coin);
+	void incrementCoins(int coin);
 
 protected:
 	bool canGetCoin = true;
 	
 	AnimatedSprite* m_pAnimSprite;
+
+	int m_hp;
+	int m_coins;
 
 	float m_x;
 	float m_y;

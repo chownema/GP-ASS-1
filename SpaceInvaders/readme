@@ -12,7 +12,7 @@ Controls:
 
 Cheats:
 - i : invincibility
-- d : instakill
+- d : instakill and lose the game
 
 
 External Library Use:
@@ -20,5 +20,9 @@ External Library Use:
 https://github.com/miloyip/rapidjson
 
 
-Fonts
+Fonts:
 https://www.fontsquirrel.com/fonts/amatic
+
+Assets:
+
+

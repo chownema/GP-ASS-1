@@ -69,12 +69,19 @@ AnimEntity::Process(float deltaTime)
 		if (m_y > 599)
 		{
 			m_y = 590-m_pAnimSprite->GetHeight();
+			
 		}
 		// top
 		if (m_y < -m_pAnimSprite->GetFrameWidth())
 		{
 			m_y = 590;
+
 		}
+
+		if (m_y < 0 || m_y > 600 -m_pAnimSprite->GetFrameHeight()
+			|| m_x < 0 || m_x > 700 - -m_pAnimSprite->GetFrameWidth())
+			m_hp -= 1;
+
 		// Check if not moving
 		if (m_canMove){
 			if (m_velocityX == 0 && m_velocityY == 0 && !invunrable) {
@@ -262,4 +269,34 @@ void
 AnimEntity::setCanGetCoins(bool coin)
 {
 	canGetCoin = coin;
+}
+
+void
+AnimEntity::setCoins(int coins)
+{
+		m_coins = coins;
+}
+
+void
+AnimEntity::incrementCoins(int coin)
+{
+	m_coins += coin;
+}
+
+int
+AnimEntity::getHP()
+{
+	return(m_hp);
+}
+
+int
+AnimEntity::getCoins()
+{
+	return(m_coins);
+}
+
+void
+AnimEntity::setHitPoints(int hitPoints)
+{
+	m_hp = hitPoints;
 }
