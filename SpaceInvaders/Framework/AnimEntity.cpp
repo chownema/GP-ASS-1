@@ -81,6 +81,7 @@ AnimEntity::Process(float deltaTime)
 		if (m_y < 0 || m_y > 600 -m_pAnimSprite->GetFrameHeight()
 			|| m_x < 0 || m_x > 700 - -m_pAnimSprite->GetFrameWidth())
 			m_hp -= 1;
+			
 
 		// Check if not moving
 		if (m_canMove){

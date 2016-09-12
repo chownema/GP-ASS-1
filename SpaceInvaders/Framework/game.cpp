@@ -302,11 +302,20 @@ Game::DrawGameOverState(BackBuffer& backBuffer)
 	string survivedString = "Time Survived " + s.str();
 	s.str(""); // Clear stream
 	const char* SurvivedChar = survivedString.c_str();
-	
-	
+
+
 	// Coins Text Char	
-	s << pAnimPlayer->getCoins();
-	string coinsString = "Coins Gobbled " + s.str();
+	string coinsString = "";
+		if (pAnimPlayer->getCoins() > 0) {
+			s << pAnimPlayer->getCoins();
+			 coinsString = "Coins Gobbled " + s.str();
+			
+		}
+		else {
+			s << -(pAnimPlayer->getCoins());
+			coinsString = "Toasts Stole " + s.str() + " Coins";
+		
+		}
 	s.str(""); // Clear stream
 	const char* coinChar = coinsString.c_str();
 
@@ -513,7 +522,7 @@ Game::Process(float deltaTime)
 			|| y < -20) {
 				delete *itEnemy;
 				itEnemy = pEnemyVector.erase(itEnemy);
-				SpawnExplosion(x, y);
+				//SpawnExplosion(x, y);
 		}
 		else
 			itEnemy++;
@@ -562,6 +571,12 @@ Game::Process(float deltaTime)
 	// If player is dead set game state to OVER
 
 	
+}
+
+void 
+Game::playHitSound()
+{
+	sound.playSound(catSoundA, false);
 }
 
 void
@@ -708,19 +723,23 @@ Game::InputRouter(InputControls input) {
 			break;
 		case InputControls::pJumpUp:
 			MovePlayerUp(2);
+			SpawnExplosion(pAnimPlayer->GetPositionX(), pAnimPlayer->GetPositionY(), "up");
 			break;
 		case InputControls::pJumpDown:
 			MovePlayerDown(2);
+			SpawnExplosion(pAnimPlayer->GetPositionX(), pAnimPlayer->GetPositionY(), "down");
 			break;
 		case InputControls::pJumpLeft:
 			MovePlayerLeft(2);
 			pAnimPlayer->setDirection("left");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 4);
+			SpawnExplosion(pAnimPlayer->GetPositionX(), pAnimPlayer->GetPositionY(), "left");
 			break;
 		case InputControls::pJumpRight:
 			MovePlayerRight(2);
 			pAnimPlayer->setDirection("right");
 			pAnimPlayer->getAnimSprite()->SetYDrawPos(pAnimPlayer->getAnimSprite()->GetFrameHeight() * 5);
+			SpawnExplosion(pAnimPlayer->GetPositionX(), pAnimPlayer->GetPositionY(), "right");
 			break;
 		case InputControls::pMoveUp:
 			MovePlayerUp(1);
@@ -744,7 +763,6 @@ Game::InputRouter(InputControls input) {
 			if (pItemA->getActiveStatus())
 				StartGame();
 			else if (pItemB->getActiveStatus()) {
-				_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 				//sound.releaseSound(playingBGM);
 				//sound.releaseSound(menuBGM);
 				//sound.releaseSound(catHitA);
@@ -800,18 +818,21 @@ void
 Game::MovePlayerRight(float dist)
 {
 	pAnimPlayer->SetHorizontalVelocity(playerSpeed*dist);
+	
 }
 
 void
 Game::MovePlayerUp(float dist)
 {
 	pAnimPlayer->SetVerticalVelocity(-playerSpeed*dist);
+	
 }
 
 void
 Game::MovePlayerDown(float dist)
 {
 	pAnimPlayer->SetVerticalVelocity(playerSpeed*dist);
+	
 }
 
 /* Stop movement methods */
@@ -944,7 +965,7 @@ Game::SpawnEnemy(int direction, int speed)
 
 // W02.2: Spawn a Explosion in game.
 void
-Game::SpawnExplosion(int x, int y)
+Game::SpawnExplosion(int x, int y, string direction)
 {
 	// W02.2: Load the alien enemy sprite file.
 	AnimatedSprite* explosionSprite = m_pBackBuffer->CreateAnimatedSprite("AnimationAssets\\explosion.png");
@@ -957,8 +978,20 @@ Game::SpawnExplosion(int x, int y)
 
 	e->setX(x);
 	e->setY(y);
-	int speed = 1 + (rand() % (int)(10 - 1 + 1));
-	e->SetVerticalVelocity(speed);
+	int speed = 3;
+	if (direction == "left") {
+		e->SetHorizontalVelocity(3);
+	}
+	if (direction == "right") {
+		e->SetHorizontalVelocity(-3);
+	}
+	if (direction == "up") {
+		e->SetVerticalVelocity(3);
+	}
+	if (direction == "down") {
+		e->SetVerticalVelocity(-3);
+	}
+	//e->SetVerticalVelocity(speed);
 
 	// W02.2: Add the new Enemy to the enemy container.
 	pExplosionVector.push_back(e);

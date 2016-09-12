@@ -50,9 +50,11 @@ public:
 
 	void SpawnEnemy(int direction, int speed);
 	void SpawnEnemyLine(int direction, int speed, int length);
-	void SpawnExplosion(int x, int y);
+	void SpawnExplosion(int x, int y, string direction);
 	void SpawnCoin(int x, int y);
 	void SpawnPlant();
+
+	void playHitSound();
 
 	void InputRouter(InputControls input);
 
