@@ -43,6 +43,8 @@ InputHandler::Initialise()
 	//assert(m_pGameController);
 	jump = false;
 	z = false;
+	d = false;
+	i = false;
 	return (true);
 }
 
@@ -88,6 +90,12 @@ InputHandler::ProcessInput(Game& game)
 			if (e.key.keysym.sym == SDLK_z) {
 				z = true;
 			}
+			if (e.key.keysym.sym == SDLK_i) {
+				i = true;
+			}
+			if (e.key.keysym.sym == SDLK_d) {
+				d = true;
+			}
 		}
 		else if (e.type == SDL_KEYUP) {
 			if (e.key.keysym.sym == SDLK_LEFT) {
@@ -108,6 +116,15 @@ InputHandler::ProcessInput(Game& game)
 			}
 			if (e.key.keysym.sym == SDLK_x) {
 				jump = false;
+			}
+			if (e.key.keysym.sym == SDLK_z) {
+				z = false;
+			}
+			if (e.key.keysym.sym == SDLK_i) {
+				i = false;
+			}
+			if (e.key.keysym.sym == SDLK_d) {
+				d = false;
 			}
 		}
 
@@ -167,6 +184,18 @@ InputHandler::ProcessInput(Game& game)
 			z = false;
 		}
 
+		if (d)
+		{
+			// die
+			game.InputRouter(InputControls::aDie);
+		}
+
+		if (i)
+		{
+			// invincibility
+			game.InputRouter(InputControls::aInvincibility);
+			i = false;
+		}
 
 	}
 }

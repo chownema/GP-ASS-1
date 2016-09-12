@@ -23,6 +23,7 @@ AnimEntity::AnimEntity()
 , m_velocityY(0.0f)
 , m_dead(false)
 , type("")
+, a_invunrable(false)
 {
 
 }
@@ -222,4 +223,16 @@ void
 AnimEntity::setType(const string nType)
 {
 	type = nType;
+}
+
+void
+AnimEntity::toggleAInvunrability(bool b)
+{
+	a_invunrable = b;
+}
+
+bool
+AnimEntity::getAInvunrability()
+{
+	return a_invunrable;
 }

@@ -10,6 +10,7 @@ class Player;
 class AnimEntity;
 class Enemy;
 class SoundSystem;
+class SoundClass;
 class Coin;
 class Parser;
 class MenuItem;
@@ -58,6 +59,8 @@ public:
 	void setupAnimSprite(AnimatedSprite* sprite, string type, AnimEntity* aEntity);
 
 	void ResetGame();
+
+	void setInvincibility();
 	
 protected:
 	// Draw and Process methods for their own respective GameStates
@@ -75,6 +78,8 @@ protected:
 	
 	void resumeInit();
 	void StartGame();
+
+
 	
 
 private:
@@ -89,6 +94,17 @@ public:
 	std::stringstream s;
 
 protected:
+	// Sounds
+	FMOD::Sound* playingBGM;
+	FMOD::Sound* menuBGM;
+	FMOD::Sound* catHitA;
+	FMOD::Sound* catDead;
+	FMOD::Sound* catSoundA;
+	FMOD::Sound* catSoundB;
+	FMOD::Sound* monsterSoundA;
+	FMOD::Sound* coinPickUp;
+
+
 	static Game* sm_pInstance;
 	BackBuffer* m_pBackBuffer;
 	InputHandler* m_pInputHandler;

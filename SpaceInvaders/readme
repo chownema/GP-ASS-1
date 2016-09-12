@@ -1,11 +1,24 @@
+Author : Miguel Saavedra 13826904
+Butter Cat and Breakfast
+
+Objective:
 Get all the coins you can and survive without hitting any of the bread enemies
 
-Controls
+Controls:
 - up left right down : to move
 - space : to select
-- x : boost the cat
+- hold x : boost the cat to move faster
 - z when dead : to go back to menu
 
-Cheats
+Cheats:
 - i : invincibility
 - d : instakill
+
+
+External Library Use:
+- Rapid Json
+https://github.com/miloyip/rapidjson
+
+
+Fonts
+https://www.fontsquirrel.com/fonts/amatic

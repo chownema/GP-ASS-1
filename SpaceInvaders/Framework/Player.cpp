@@ -25,7 +25,7 @@ Player::damagePlayerCheck(int damage, float time)
 		// Damage player
 		m_hp -= damage;
 	}
-	if ((time - m_timeHit) > m_iFrameTime)
+	if ((time - m_timeHit) > m_iFrameTime && !a_invunrable)
 	{
 		// Set to normal
 		invunrable = false;

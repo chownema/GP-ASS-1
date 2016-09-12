@@ -165,12 +165,12 @@ Game::Initialise()
 	m_lag = 0.0f;
 
 
-	//// Create a sample sound
-	//SoundClass soundSample;
-	//sound.createSound(&soundSample, "sounds\\drumloop.wav");
+	// Create a sample sound
+	FMOD::Sound* soundSample;
+	sound.createSound(&soundSample, "sounds\\drumloop.wav");
 
-	//// Play the sound, with loop mode
-	//sound.playSound(soundSample, true);
+	// Play the sound, with loop mode
+	sound.playSound(soundSample, true);
 
 	//// Do something meanwhile...
 	
@@ -601,7 +601,7 @@ Game::Draw(BackBuffer& backBuffer)
 	s.str(""); // Clear stream
 	const char* FPSChar = fpsString.c_str();
 
-	// FPS Text Char
+	// Spawn limiter Char
 	s << m_spawnLimiter;
 	string diffString = "Difficulty " + s.str();
 	s.str(""); // Clear stream
@@ -617,7 +617,9 @@ Game::Draw(BackBuffer& backBuffer)
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
 	// Draw Coins Text
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
+	// Limiter
 	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", diffChar, 40, width - 350, 0);
+
 
 	
 	backBuffer.Present();
@@ -637,6 +639,7 @@ Game::Quit()
 void
 Game::InputRouter(InputControls input) {
 	// Evaluate string input
+	// When In the Menu or Playing state
 	if (m_gameState == m_gameState_e::playing || m_gameState == m_gameState_e::menu) {
 		switch (input){
 		case InputControls::pHit:
@@ -682,9 +685,17 @@ Game::InputRouter(InputControls input) {
 			else if (pItemB->getActiveStatus())
 				Quit();
 			break;
+		case InputControls::aInvincibility:
+			// invincible
+			pAnimPlayer->setHitPoints(10000);
+			break;
+		case InputControls::aDie:
+			// die
+			break;
 		}
 
 	}
+	// When In the Lost state
 	else if (m_gameState == m_gameState_e::lost) {
 		switch (input){
 		case InputControls::mSelect:
@@ -696,6 +707,11 @@ Game::InputRouter(InputControls input) {
 			break;
 		}
 	}
+}
+
+void Game::setInvincibility()
+{
+	pAnimPlayer->setInvunrability(true);
 }
 
 /* Player movements */

@@ -45,6 +45,11 @@ public:
 	void SetVerticalVelocity(float y);
 
 	void setCanMove(bool move);
+
+	// Get and Toggle admin invunrability
+	void toggleAInvunrability(bool bol);
+	bool getAInvunrability();
+
 protected:
 	AnimatedSprite* m_pAnimSprite;
 
@@ -59,6 +64,7 @@ protected:
 	std::string m_direction;
 
 	bool invunrable;
+	bool a_invunrable = false; // overrides invunrable 
 
 	// type of entity
 	std::string type;

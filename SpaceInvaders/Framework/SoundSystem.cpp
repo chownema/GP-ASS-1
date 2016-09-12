@@ -29,13 +29,13 @@ SoundSystem::SoundSystem()
 
 
 void 
-SoundSystem::createSound(SoundClass *pSound, const char* pFile)
+SoundSystem::createSound(FMOD::Sound* *pSound, const char* pFile)
 {
 	m_pSystem->createSound(pFile, FMOD_DEFAULT, 0, pSound);
 }
 
 void 
-SoundSystem::playSound(SoundClass pSound, bool bLoop)
+SoundSystem::playSound(FMOD::Sound* pSound, bool bLoop)
 {
 	
 	if (!bLoop)
@@ -51,7 +51,7 @@ SoundSystem::playSound(SoundClass pSound, bool bLoop)
 }
 
 void 
-SoundSystem::releaseSound(SoundClass pSound)
+SoundSystem::releaseSound(FMOD::Sound* pSound)
 {
 	pSound->release();
 }

@@ -32,7 +32,9 @@ public:
 	bool moveRight;
 	bool select;
 	
-	bool z;
+	bool z; // To menu 
+	bool d; // Die
+	bool i; // Invincibility
 
 	bool jump;
 protected:

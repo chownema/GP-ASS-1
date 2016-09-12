@@ -3,7 +3,8 @@
 #define __SOUNDSYSTEM_H__
 
 #include "fmod.hpp"
-typedef FMOD::Sound* SoundClass;
+#include <string>
+//typedef FMOD::Sound* SoundClass;
 
 class SoundSystem
 {
@@ -13,9 +14,12 @@ public:
 	SoundSystem();
 	
 	// Class methods
-	void createSound(SoundClass *pSound, const char* pFile);
-	void playSound(SoundClass pSound, bool bLoop);
-	void releaseSound(SoundClass pSound);
+	void createSound(FMOD::Sound* *pSound, const char* pFile);
+	void playSound(FMOD::Sound* pSound, bool bLoop);
+	void releaseSound(FMOD::Sound* pSound);
+
+public:
+
 };
 
 #endif // __SOUNDSYSTEM_H__
