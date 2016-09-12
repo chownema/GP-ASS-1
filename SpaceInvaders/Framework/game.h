@@ -111,7 +111,16 @@ protected:
 	int m_gameState = menu; // set init value for start of game
 
 	int m_difficultyIncrease = 0;
-	int spawningTicks;
+	// Amount spawning per second
+	int m_spawningAmount;
+	bool m_canSpawn;
+	bool m_canIncreaseDifficulty;
+	int m_increaseDifficulty;
+	int m_difficultyCounter;
+	int m_spawnCount;
+	int m_spawnLimiter;
+	int round;
+	int offloader;
 
 	// Menu Entities
 	MenuItem* pItemA;

@@ -69,6 +69,13 @@ Game::Game()
 , m_numUpdates(0)
 , m_lastTime(0)
 , m_lag(0)
+, m_canSpawn(true)
+, m_spawnCount(0)
+, m_spawnLimiter(20)
+, m_increaseDifficulty(0)
+, m_canIncreaseDifficulty(true)
+, m_difficultyCounter(0)
+, round(0)
 {
 	
 }
@@ -85,7 +92,8 @@ Game::Initialise()
 	// Load in data
 	Parser::GetInstance().loadInFile("data.ini");
 	const Value& enemyJson = Parser::GetInstance().document["enemy"];
-	spawningTicks = enemyJson["spawning_ticks"].GetInt();
+	m_spawningAmount = enemyJson["spawn_amount_per_second"].GetInt();
+	m_increaseDifficulty = enemyJson["difficulty_increase"].GetInt(); 
 
 	
 	m_pBackBuffer = new BackBuffer();
@@ -289,23 +297,66 @@ Game::Process(float deltaTime)
 	// Count total simulation time elapsed:
 	m_elapsedSeconds += deltaTime;
 	
+	
+
 	// Spawn Enemy on a timer
 	const Value& enemyJson = Parser::GetInstance().document["enemy"];
-	if (0 == int(m_executionTime+0.5) % enemyJson["ease_ratio"].GetInt())
-		m_difficultyIncrease += enemyJson["difficulty_increase"].GetFloat();
-		
-	if (0 < spawningTicks - m_difficultyIncrease) 
-	{
-		spawningTicks = spawningTicks - int(m_difficultyIncrease/16);
+	if (0 == int(m_executionTime + 0.5) % int(enemyJson["difficulty_increase_seconds"].GetInt())){
+		m_canIncreaseDifficulty = true;
 	}
 
-	comparisonTime++;
-	if (0 == comparisonTime % spawningTicks) {
-		if (0 == int(m_elapsedSeconds + 0.5) % 1) {
-			int x = (0 + (rand() % (int)(3 - 0 + 1)));
-			SpawnEnemy(x);
+	// decrease difficulty
+	if (m_canIncreaseDifficulty)
+	{
+		if (0 == int(m_executionTime + 0.5) % enemyJson["difficulty_increase_seconds"].GetInt()) {
+
+			if (m_difficultyCounter < 2)
+			{
+				m_difficultyCounter++;
+				// hold onnn were going homeee
+			}
+			else {
+				// Set Cant spawn after limit has been reached
+				m_canIncreaseDifficulty = false;
+				offloader = 1;
+			}
 		}
 	}
+	else{
+		// increase difficulty
+		m_spawnLimiter -= offloader;
+		// ensure doesnt go bellow 1
+		if (m_spawnLimiter < 1)
+			m_spawnLimiter = 2;
+		offloader = 0;
+		// Reset the spawn counter
+		m_difficultyCounter = 0;
+	}
+	comparisonTime++;
+	
+
+	// spawn every 1 seconds
+	if (0 == int(m_executionTime + 0.5) % enemyJson["spawn_per_second"].GetInt()) {
+		// Set can spawn
+		m_canSpawn = true;
+		// amount spawning per second
+		if (0 == comparisonTime % m_spawnLimiter) {
+			if (m_canSpawn) {
+				if (m_spawnCount < m_spawningAmount) {
+					int x = (0 + (rand() % (int)(3 - 0 + 1)));
+					SpawnEnemy(x);
+					m_spawnCount++;
+				}
+				else{
+					// Set Cant spawn after limit has been reached
+					m_canSpawn = false;
+					// Reset the spawn counter
+					m_spawnCount = 0;
+				}
+			}
+		}
+	}
+	
 
 	// Spawn Coins on a timer
 	if (0 == comparisonTime % 100) {
@@ -454,7 +505,7 @@ Game::Draw(BackBuffer& backBuffer)
 
 		
 
-	/* Draw text according to gamestate */
+	/* Draw Text according to gamestate */
 		
 	
 
@@ -481,7 +532,7 @@ Game::Draw(BackBuffer& backBuffer)
 	const char* FPSChar = fpsString.c_str();
 
 	// FPS Text Char
-	s << m_difficultyIncrease;
+	s << m_spawnLimiter;
 	string diffString = "Difficulty " + s.str();
 	s.str(""); // Clear stream
 	const char* diffChar = diffString.c_str();
