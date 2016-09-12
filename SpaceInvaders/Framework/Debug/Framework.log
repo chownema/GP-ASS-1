@@ -1,4 +1,4 @@
-﻿Build started 12/09/16 3:22:52 pm.
+﻿Build started 12/09/16 4:05:05 pm.
      1>Project "\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Framework\Framework.vcxproj" on node 2 (Build target(s)).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(388,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Framework.vcxproj).  This can lead to incorrect clean and rebuild behavior.
      1>ClCompile:
@@ -21,12 +21,12 @@
      1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(489): warning C4018: '<' : signed/unsigned mismatch
      1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(494): warning C4018: '<' : signed/unsigned mismatch
      1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(499): warning C4018: '<' : signed/unsigned mismatch
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(705): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(712): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(719): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(726): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(749): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(762): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(708): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(715): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(722): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(729): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(752): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>\\psf\home\desktop\game prog\gp-ass-1\spaceinvaders\framework\game.cpp(765): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.exe" /INCREMENTAL /NOLOGO /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\lib\\" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib fmodl_vc.lib SDL2_ttf.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Debug\SpaceShips.lib" /MACHINE:X86 Debug\AnimatedSprite.obj
          Debug\backbuffer.obj
@@ -50,4 +50,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.49
+Time Elapsed 00:00:02.34

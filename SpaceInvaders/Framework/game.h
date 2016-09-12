@@ -47,7 +47,8 @@ public:
 	void ResetMovement();
 	void PauseGame();
 
-	void SpawnEnemy(int direction);
+	void SpawnEnemy(int direction, int speed);
+	void SpawnEnemyLine(int direction, int speed, int length);
 	void SpawnExplosion(int x, int y);
 	void SpawnCoin(int x, int y);
 
@@ -97,6 +98,14 @@ protected:
 	enum m_gameState_e {
 		playing = 0, paused, menu, lost, shop
 	} y2k;
+
+	// Enemy Patterns
+	enum m_enemyState_e {
+		line = 0, wave, jaws, random, diagonal
+	};
+
+	// enemy attack formation
+	int m_enemyState_e = random;
 
 	// Simulation Counters:
 	float m_elapsedSecondsTotal;

@@ -344,7 +344,7 @@ Game::Process(float deltaTime)
 			if (m_canSpawn) {
 				if (m_spawnCount < m_spawningAmount) {
 					int x = (0 + (rand() % (int)(3 - 0 + 1)));
-					SpawnEnemy(x);
+					SpawnEnemy(x, 0);
 					m_spawnCount++;
 				}
 				else{
@@ -681,7 +681,7 @@ Game::StartGame() {
 
 // W02.2: Spawn a Enemy in game.
 void 
-Game::SpawnEnemy(int direction)
+Game::SpawnEnemy(int direction, int speed)
 {	
 	int x = 0;
 	int y = 0;
@@ -691,12 +691,15 @@ Game::SpawnEnemy(int direction)
 	int MIN_SPEED = enemyJson["min_speed"].GetInt();
 	string SPRITE_LOC = enemyJson["sprite_loc"].GetString();
 	// W02.2: Load the alien enemy sprite file.
-	Sprite* enemySprite = m_pBackBuffer->CreateSprite(SPRITE_LOC.c_str());
+	AnimatedSprite* enemySprite = m_pBackBuffer->CreateAnimatedSprite(SPRITE_LOC.c_str());
 
 	// W02.2: Create a new Enemy object.
 	Enemy* e = new Enemy();
-	e->Initialise(enemySprite);
-	int speed = MIN_SPEED + (rand() % (int)(MAX_SPEED - MIN_SPEED + 1));
+
+	setupAnimSprite(enemySprite, "enemy", e);
+
+	if (speed == 0)
+		speed = MIN_SPEED + (rand() % (int)(MAX_SPEED - MIN_SPEED + 1));
 	if (direction == 0){ // up
 		y = 0;
 		x = 0 + (rand() % (int)(width - 0 + 1));
