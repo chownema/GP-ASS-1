@@ -759,6 +759,12 @@ Game::InputRouter(InputControls input) {
 			break;
 		case InputControls::aDie:
 			// die
+			sound.playSound(catHitA, false);
+			pAnimPlayer->damagePlayerCheck(100000000, m_executionTime + 0.5);
+			m_timeSurvived = m_executionTime;
+			m_gameState = lost;
+			pAnimPlayer->setCanMove(false);
+			sound.playSound(catSoundA, false);
 			break;
 		}
 
