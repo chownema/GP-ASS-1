@@ -50,7 +50,11 @@ public:
 	void toggleAInvunrability(bool bol);
 	bool getAInvunrability();
 
+	void setCanGetCoins(bool coin);
+
 protected:
+	bool canGetCoin = true;
+	
 	AnimatedSprite* m_pAnimSprite;
 
 	float m_x;

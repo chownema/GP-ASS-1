@@ -504,7 +504,8 @@ Game::Process(float deltaTime)
 			}
 			// Create animation hit effect
 			InputRouter(InputControls::pHit);
-			SpawnExplosion(x, y);
+			pAnimPlayer->setCoins(pAnimPlayer->getCoins() - 1);
+			//SpawnExplosion(x, y);
 		}
 		// if out of bounds remove enemy
 		else 
@@ -545,7 +546,7 @@ Game::Process(float deltaTime)
 		// If collision Collect coin and remove it
 		if (pAnimPlayer->IsCollidingWithAnim(**itCoin) || coin->IsDead()) {
 			sound.playSound(coinPickUp, false);
-			pAnimPlayer->incrementCoins(1);
+			pAnimPlayer->incrementCoins(10);
 			delete *itCoin;
 			itCoin = pCoinVector.erase(itCoin);
 			SpawnExplosion(x, y);
@@ -656,22 +657,26 @@ Game::Draw(BackBuffer& backBuffer)
 
 	// Spawn limiter Char
 	s << 20-m_spawnLimiter;
-	string diffString = "Difficulty " + s.str();
+	string diffString = "Level " + s.str();
 	s.str(""); // Clear stream
 	const char* diffChar = diffString.c_str();
 
-		
+
+	// position of status bar text
+	int statusBarHPos = height-50;
+
+
 	SDL_Color colour = { 0, 0, 0, 255 };
 	// Draw Score Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", time, 40, width-425, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", time, 40, width - 425, statusBarHPos);
 	// Draw Health Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", healthChar, 40, width - 800, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", healthChar, 40, width - 760, statusBarHPos);
 	// Draw FPS
-	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", FPSChar, 40, width - 200, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", FPSChar, 40, width - 75, statusBarHPos);
 	// Draw Coins Text
-	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", coinChar, 40, width - 600, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", coinChar, 40, width - 600, statusBarHPos);
 	// Limiter
-	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", diffChar, 40, width - 350, 0);
+	m_pBackBuffer->DrawTextOnScreen(colour, "fonts//AmaticSC-Regular.ttf", diffChar, 40, width - 350, statusBarHPos);
 
 
 	

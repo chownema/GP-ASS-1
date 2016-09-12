@@ -45,6 +45,8 @@ Player::damagePlayerCheck(int damage, float time)
 	return (m_dead);
 }
 
+
+
 void
 Player::setInvunrability(bool invunrability)
 {
@@ -71,6 +73,7 @@ Player::setIFrameTime(float time)
 void
 Player::setCoins(int coins)
 {
+	if (canGetCoin)
 	m_coins = coins;
 }
 

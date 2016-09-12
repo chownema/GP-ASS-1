@@ -54,6 +54,35 @@ AnimEntity::Process(float deltaTime)
 	m_y += m_velocityY;
 
 	if (this->getType() == "player") {
+		// no boundaries ;)
+		// right
+		if (m_x > 799)
+		{
+			m_x = -m_pAnimSprite->GetFrameWidth();
+		}
+		// left
+		if (m_x < -m_pAnimSprite->GetFrameWidth())
+		{
+			m_x = 790;
+		}
+		// bottom
+		if (m_y > 599)
+		{
+			m_y = 590-m_pAnimSprite->GetHeight();
+		}
+		// top
+		if (m_y < -m_pAnimSprite->GetFrameWidth())
+		{
+			m_y = 590;
+		}
+
+		// fix the collect coin bug
+		if (m_y > 720 || m_y < 0 || m_x > 550|| m_x < 0) {
+			// set cant get coins
+			setCanGetCoins(false);
+		}
+		else
+			setCanGetCoins(true);
 		// Check if not moving
 		if (m_canMove){
 			if (m_velocityX == 0 && m_velocityY == 0 && !invunrable) {
@@ -235,4 +264,10 @@ bool
 AnimEntity::getAInvunrability()
 {
 	return a_invunrable;
+}
+
+void
+AnimEntity::setCanGetCoins(bool coin)
+{
+	canGetCoin = coin;
 }

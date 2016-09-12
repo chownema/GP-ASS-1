@@ -14,10 +14,12 @@ public:
 	void setHitFrame();
 	void setInvunrability(bool invunrable);
 	void setIFrameTime(float time);
+	void setCanGetCoins(bool coin);
 
 	int getCoins();
 	int getHP();
 	bool getInvunrability();
+	bool canGetCoins = true;
 	
 	
 
