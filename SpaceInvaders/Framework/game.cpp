@@ -544,15 +544,18 @@ Game::Process(float deltaTime)
 		int x = coin->GetPositionX();
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
-		if (pAnimPlayer->IsCollidingWithAnim(**itCoin) || coin->IsDead()) {
+		if (pAnimPlayer->IsCollidingWithAnim(**itCoin)) {
 			sound.playSound(coinPickUp, false);
 			pAnimPlayer->incrementCoins(10);
-			delete *itCoin;
-			itCoin = pCoinVector.erase(itCoin);
-			SpawnExplosion(x, y);
+			if (coin->IsDead() || pAnimPlayer->IsCollidingWithAnim(**itCoin)) {
+				delete *itCoin;
+				itCoin = pCoinVector.erase(itCoin);
+			}
+			//SpawnExplosion(x, y);
 		}
 		else
 			itCoin++;
+		
 	}
 
 

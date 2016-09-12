@@ -75,14 +75,6 @@ AnimEntity::Process(float deltaTime)
 		{
 			m_y = 590;
 		}
-
-		// fix the collect coin bug
-		if (m_y > 720 || m_y < 0 || m_x > 550|| m_x < 0) {
-			// set cant get coins
-			setCanGetCoins(false);
-		}
-		else
-			setCanGetCoins(true);
 		// Check if not moving
 		if (m_canMove){
 			if (m_velocityX == 0 && m_velocityY == 0 && !invunrable) {
