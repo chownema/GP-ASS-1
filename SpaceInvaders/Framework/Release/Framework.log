@@ -1,9 +1,11 @@
-﻿Build started 12/09/16 10:14:30 pm.
+﻿Build started 13/09/16 9:26:30 am.
      1>Project "\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Framework\Framework.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\include\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\include" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\inc\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AnimatedSprite.cpp backbuffer.cpp Coin.cpp Enemy.cpp entity.cpp AnimEntity.cpp game.cpp inputhandler.cpp logmanager.cpp main.cpp MenuItem.cpp Parser.cpp Player.cpp SoundSystem.cpp sprite.cpp texture.cpp texturemanager.cpp
-         AnimatedSprite.cpp
-         backbuffer.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\include\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\include" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\inc\\" /I"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\include" /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt AnimEntity.cpp Coin.cpp Enemy.cpp MenuItem.cpp Player.cpp SoundSystem.cpp entity.cpp game.cpp inputhandler.cpp main.cpp
+         AnimEntity.cpp
+     1>AnimEntity.cpp(124): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
+     1>AnimEntity.cpp(169): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
+     1>AnimEntity.cpp(176): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
          Coin.cpp
      1>Coin.cpp(10): warning C4305: '=' : truncation from 'double' to 'float'
      1>Coin.cpp(41): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
@@ -12,58 +14,52 @@
      1>Enemy.cpp(17): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
      1>Enemy.cpp(21): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>Enemy.cpp(22): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+         MenuItem.cpp
+         Player.cpp
+     1>Player.cpp(24): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+         SoundSystem.cpp
          entity.cpp
      1>entity.cpp(167): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>entity.cpp(174): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>entity.cpp(181): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
      1>entity.cpp(188): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-         AnimEntity.cpp
-     1>AnimEntity.cpp(124): warning C4244: 'initializing' : conversion from 'int' to 'float', possible loss of data
-     1>AnimEntity.cpp(169): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
-     1>AnimEntity.cpp(176): warning C4244: '=' : conversion from 'int' to 'float', possible loss of data
          game.cpp
-     1>game.cpp(149): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(150): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(160): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(161): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(264): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(269): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(274): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(295): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(296): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(297): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(298): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(336): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(337): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(338): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(339): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
-     1>game.cpp(447): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>game.cpp(448): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>game.cpp(452): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>game.cpp(455): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-     1>game.cpp(496): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>game.cpp(497): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>game.cpp(498): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-     1>game.cpp(559): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(564): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(569): warning C4018: '<' : signed/unsigned mismatch
-     1>game.cpp(847): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>game.cpp(854): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>game.cpp(861): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>game.cpp(868): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>game.cpp(891): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>game.cpp(904): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>game.cpp(168): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(169): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(179): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(180): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(278): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(283): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(288): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(293): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(314): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(315): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(316): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(317): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(361): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(370): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(371): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(372): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(373): warning C4244: 'argument' : conversion from 'double' to 'int', possible loss of data
+     1>game.cpp(491): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>game.cpp(492): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>game.cpp(497): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>game.cpp(500): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
+     1>game.cpp(542): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>game.cpp(543): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>game.cpp(544): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
+     1>game.cpp(607): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(612): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(617): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(622): warning C4018: '<' : signed/unsigned mismatch
+     1>game.cpp(903): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>game.cpp(910): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>game.cpp(917): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>game.cpp(924): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>game.cpp(947): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>game.cpp(960): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
          inputhandler.cpp
-         logmanager.cpp
          main.cpp
-         MenuItem.cpp
-         Parser.cpp
-         Player.cpp
-     1>Player.cpp(24): warning C4244: '=' : conversion from 'float' to 'int', possible loss of data
-         SoundSystem.cpp
-         sprite.cpp
-         texture.cpp
-         texturemanager.cpp
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Release\SpaceShips.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2-2.0.3\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL\SDL2_image-2.0.0\lib\x86" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\FMOD\lib\\" /LIBPATH:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\\SDL2_ttf-2.0.14\lib\x86" SDL2.lib SDL2main.lib SDL2_image.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib fmodl_vc.lib SDL2_ttf.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Release\SpaceShips.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"\\psf\Home\Desktop\Game prog\GP-ASS-1\SpaceInvaders\Release\SpaceShips.lib" /MACHINE:X86 /SAFESEH Release\AnimatedSprite.obj
          Release\backbuffer.obj
@@ -89,4 +85,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:09.93
+Time Elapsed 00:00:07.04

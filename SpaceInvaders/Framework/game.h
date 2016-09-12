@@ -52,6 +52,7 @@ public:
 	void SpawnEnemyLine(int direction, int speed, int length);
 	void SpawnExplosion(int x, int y);
 	void SpawnCoin(int x, int y);
+	void SpawnPlant();
 
 	void InputRouter(InputControls input);
 
@@ -98,10 +99,7 @@ protected:
 	FMOD::Sound* playingBGM;
 	FMOD::Sound* menuBGM;
 	FMOD::Sound* catHitA;
-	FMOD::Sound* catDead;
 	FMOD::Sound* catSoundA;
-	FMOD::Sound* catSoundB;
-	FMOD::Sound* monsterSoundA;
 	FMOD::Sound* coinPickUp;
 
 

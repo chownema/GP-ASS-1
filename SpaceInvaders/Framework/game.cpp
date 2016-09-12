@@ -88,11 +88,16 @@ Game::~Game()
 
 bool 
 Game::Initialise()
+
 {
+	
+
 	// Load in data
 	Parser::GetInstance().loadInFile("data.ini");
-	// Load in data to json obj
+	// Load in enemy data to json obj
 	const Value& enemyJson = Parser::GetInstance().document["enemy"];
+	// Load in sound data to json obj
+	const Value& soundJson = Parser::GetInstance().document["sounds"];
 	// set some variables
 	m_spawningAmount = enemyJson["spawn_amount_per_second"].GetInt();
 	m_increaseDifficulty = enemyJson["difficulty_increase"].GetInt(); 
@@ -111,25 +116,22 @@ Game::Initialise()
 			LogManager::GetInstance().Log("InputHandler Init Fail!");
 			return (false);
 		}
-		const Value& soundJson = Parser::GetInstance().document["sounds"];
-
-
-		// Create a sample sound
-		FMOD::Sound* soundSample;
-		sound.createSound(&soundSample, soundJson["menu"].GetString());
+		// Create menu bgm
+		sound.createSound(&playingBGM, soundJson["playing"].GetString());
+		sound.createSound(&catHitA, soundJson["catHit"].GetString());
+		sound.createSound(&catSoundA, soundJson["catA"].GetString());
+		sound.createSound(&coinPickUp, soundJson["coin"].GetString());
 
 		// Play the sound, with loop mode
-		sound.playSound(soundSample, true);
+		sound.playSound(playingBGM, true);
 
 		//// Do something meanwhile...
 
 		//// Release the sound
 		////sound.releaseSound(soundSample);
-
 		m_programRunning = true;
 	}
 	
-
 
 	
 
@@ -181,6 +183,11 @@ Game::Initialise()
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
 
+
+	// Spawn anemities
+	for (int i = 0; i < 25; i++){
+		SpawnPlant();
+	}
 
 
 
@@ -267,6 +274,11 @@ Game::DrawGameOverState(BackBuffer& backBuffer)
 
 	backBuffer.Clear();
 
+	// Draw plants
+	for (int i = 0; i < pPlantsVector.size(); i++) {
+		pPlantsVector[i]->Draw(backBuffer);
+	}
+
 	// Draw enemies
 	for (int i = 0; i < pEnemyVector.size(); i++) {
 		pEnemyVector[i]->Draw(backBuffer);
@@ -312,6 +324,17 @@ Game::DrawGameOverState(BackBuffer& backBuffer)
 void 
 Game::ProcessMenuState(float deltaTime)
 {
+	
+	// Process Plants
+	for (itPlant = pPlantsVector.begin(); itPlant < pPlantsVector.end();)
+	{
+		MenuItem* plant = *itPlant;
+		plant->Process(deltaTime);
+		// If collision Collect coin and remove it
+		itPlant++;
+	}
+
+	
 	// Process character to move around the screen
 	pAnimPlayer->Process(deltaTime);
 	
@@ -334,6 +357,10 @@ Game::DrawMenuState(BackBuffer& backBuffer)
 	++m_frameCount;
 
 	backBuffer.Clear();
+	// Draw plants
+	for (int i = 0; i < pPlantsVector.size(); i++) {
+		pPlantsVector[i]->Draw(backBuffer);
+	}
 
 	SDL_Color colour = { 0, 0, 0, 255 };
 	int mainHeaderSize = 200;
@@ -367,6 +394,16 @@ Game::Process(float deltaTime)
 	// Count total simulation time elapsed:
 	m_elapsedSeconds += deltaTime;
 	
+	// Process Plants
+	for (itPlant = pPlantsVector.begin(); itPlant < pPlantsVector.end();)
+	{
+		MenuItem* plant = *itPlant;
+		plant->Process(deltaTime);
+		// If collision Collect coin and remove it
+		itPlant++;
+	}
+
+
 	
 	if (!(m_gameState == m_gameState_e::lost)) {
 		// Spawn Enemy on a timer
@@ -456,12 +493,14 @@ Game::Process(float deltaTime)
 		// If collision end game and kill player
 		if (ene->IsCollidingWithAnim(*pAnimPlayer)) {
 			// Damage player and set dead if no hp left
+			sound.playSound(catHitA, false);
 			if (pAnimPlayer->damagePlayerCheck(25, m_executionTime + 0.5))
 			{
 				// set time
 				m_timeSurvived = m_executionTime;
 				m_gameState = lost;
 				pAnimPlayer->setCanMove(false);
+				sound.playSound(catSoundA, false);
 			}
 			// Create animation hit effect
 			InputRouter(InputControls::pHit);
@@ -505,6 +544,7 @@ Game::Process(float deltaTime)
 		int y = coin->GetPositionY();
 		// If collision Collect coin and remove it
 		if (pAnimPlayer->IsCollidingWithAnim(**itCoin) || coin->IsDead()) {
+			sound.playSound(coinPickUp, false);
 			pAnimPlayer->incrementCoins(1);
 			delete *itCoin;
 			itCoin = pCoinVector.erase(itCoin);
@@ -513,6 +553,7 @@ Game::Process(float deltaTime)
 		else
 			itCoin++;
 	}
+
 
 	// If player is dead set game state to OVER
 
@@ -562,6 +603,11 @@ Game::Draw(BackBuffer& backBuffer)
 
 	backBuffer.Clear();
 
+	// Draw plants
+	for (int i = 0; i < pPlantsVector.size(); i++) {
+		pPlantsVector[i]->Draw(backBuffer);
+	}
+
 	// Draw enemies
 	for (int i = 0; i < pEnemyVector.size(); i++) {
 		pEnemyVector[i]->Draw(backBuffer);
@@ -609,7 +655,7 @@ Game::Draw(BackBuffer& backBuffer)
 	const char* FPSChar = fpsString.c_str();
 
 	// Spawn limiter Char
-	s << m_spawnLimiter;
+	s << 20-m_spawnLimiter;
 	string diffString = "Difficulty " + s.str();
 	s.str(""); // Clear stream
 	const char* diffChar = diffString.c_str();
@@ -689,8 +735,15 @@ Game::InputRouter(InputControls input) {
 		case InputControls::mSelect:
 			if (pItemA->getActiveStatus())
 				StartGame();
-			else if (pItemB->getActiveStatus())
+			else if (pItemB->getActiveStatus()) {
+				_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+				//sound.releaseSound(playingBGM);
+				//sound.releaseSound(menuBGM);
+				//sound.releaseSound(catHitA);
+				//sound.releaseSound(catSoundA);
+				//sound.releaseSound(coinPickUp);
 				Quit();
+			}
 			break;
 		case InputControls::aInvincibility:
 			// invincible
@@ -913,6 +966,45 @@ Game::SpawnCoin(int x, int y)
 	pCoinVector.push_back(e);
 }
 
+void
+Game::SpawnPlant()
+{
+	int y = 0 + (rand() % (int)(height - 0 + 1));
+	int x = 0 + (rand() % (int)(width - 0 + 1));
+
+
+	const Value& plantJsonA = Parser::GetInstance().document["plantA"];
+	const Value& plantJsonB = Parser::GetInstance().document["plantB"];
+	const Value& butterflyJson = Parser::GetInstance().document["butterfly"];
+	MenuItem* e = new MenuItem();
+	int plantInt = 1 == (0 + (rand() % (int)(3 - 0 + 1)));
+
+	if (plantInt == 0){
+		AnimatedSprite* plantSprite = m_pBackBuffer->CreateAnimatedSprite(plantJsonA["sprite_loc"].GetString());
+		setupAnimSprite(plantSprite, "plantA", e);
+	}
+	else if (plantInt == 1){
+		AnimatedSprite* plantSprite = m_pBackBuffer->CreateAnimatedSprite(plantJsonB["sprite_loc"].GetString());
+		setupAnimSprite(plantSprite, "plantB", e);
+		int plantInt2 = 1 == (0 + (rand() % (int)(1 - 0 + 1)));
+		if (plantInt2 == 0)
+			plantSprite->SetYDrawPos(plantSprite->GetFrameHeight() * 2);
+	}
+	else if (plantInt == 2){
+		AnimatedSprite* plantSprite = m_pBackBuffer->CreateAnimatedSprite(butterflyJson["sprite_loc"].GetString());
+		setupAnimSprite(plantSprite, "butterfly", e);
+	}
+	else if (plantInt == 3){
+		AnimatedSprite* plantSprite = m_pBackBuffer->CreateAnimatedSprite(butterflyJson["sprite_loc"].GetString());
+		setupAnimSprite(plantSprite, "butterfly", e);
+	}
+	// Call generic setup sprite function
+	
+	e->setX(x);
+	e->setY(y);
+
+	pPlantsVector.push_back(e);
+}
 void 
 Game::setupAnimSprite(AnimatedSprite* sprite, string type, AnimEntity* aEntity)
 {
