@@ -3,6 +3,10 @@ Butter Cat and Breakfast
 
 Objective:
 Get all the coins you can and survive without hitting any of the bread enemies
+You will lose hp if you move out of the boundaries, how ever your butteryness
+can keep you alive outside the reality pane with health less than ususal. 
+
+You will lose coins if you hit toasts as they are greedy for your butter coins.
 
 Controls:
 - up left right down : to move
@@ -13,7 +17,7 @@ Controls:
 Cheats:
 - i : invincibility
 - d : instakill and lose the game
-
+- p : pause game
 
 External Library Use:
 - Rapid Json

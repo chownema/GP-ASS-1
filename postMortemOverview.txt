@@ -3,6 +3,7 @@ Postmortem Overview
 Overview, 
 
 What Went Right, 
+- Sprite Spawning
 
 What Went Wrong, 
 
@@ -10,3 +11,13 @@ Lessons Learnt,
 
 
 Conclusion.
+
+
+What Went Wrong
+•	Animation
+•	Fmod sound manipulation
+•	IniParser
+•	Collision
+•	Installing Middleware
+•	SDL ttf
+•	Enemy Ini Parser
